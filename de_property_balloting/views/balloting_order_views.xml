@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+        <record id="action_property_balloting_booking" model="ir.actions.act_window">
+            <field name="name">Booking</field>
+            <field name="res_model">sale.order</field>
+            <field name="domain">[('is_property_order','=',True)]</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('de_property_sale.property_sale_order_view_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('de_property_sale.property_sale_order_form_view')})]"/>
+            <field name="context">{'default_is_property_order':True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+              </p><p>
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+              </p>
+            </field>
+        </record>
+        
+        
+   
+        <menuitem id="property_balloting_booking" name="Booking" parent="menu_property_balloting_orders" action="action_property_balloting_booking" sequence="10"/>
+        
+    </data>
+</odoo>

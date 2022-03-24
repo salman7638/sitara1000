@@ -1,0 +1,60 @@
+<odoo>
+<data>
+<!--  product.template.stage form view  -->
+    <record id="product_template_stage_form_view" model="ir.ui.view">
+        <field name="name">product.template.stage.form.view</field>
+        <field name="model">product.template.stage</field>
+        <field name="arch" type="xml">
+            <form string="Product stages">
+                <sheet>
+                    <group>
+                        <div class="de_title">
+                            <h1>
+                                <field name="name" placeholder="Name"/>
+                            </h1>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--  product.template.stage  tree view  -->
+
+    <record id="product_template_stage_tree" model="ir.ui.view">
+        <field name="name">product.template.stage.tree</field>
+        <field name="model">product.template.stage</field>
+        <field name="arch" type="xml">
+            <tree name="product_stages" string="Product Stages">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!--  product.template.stage action  -->
+
+    <record id="product_template_stage_actions" model="ir.actions.act_window">
+        <field name="name">Product stages</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template.stage</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create"> Add Product Stages Details Here... </p>
+        </field>
+    </record>
+    <!--  product.template.stage menu  -->
+
+    <menuitem action="product_template_stage_actions" id="product_template_stage" name="Product Stages" parent="stock.menu_stock_config_settings" sequence="70"/>
+</data>
+<!--  product.category form view  -->
+<record id="product_category_form_view" model="ir.ui.view">
+    <field name="name">product.category.form.view</field>
+    <field name="model">product.category</field>
+    <field name="inherit_id" ref="product.product_category_form_view"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='parent_id']" position="after">
+            <field name="stage_ids" widget="many2many_tags"/>
+        </xpath>
+    </field>
+</record>
+</odoo>

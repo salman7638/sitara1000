@@ -1,0 +1,36 @@
+<odoo>
+  <data>
+    <record id="crm_lead_view_form_inherit_property_unit" model="ir.ui.view">
+        <field name="name">crm.lead.view.form.inherit.property.unit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="assign_matched_properties" string="Match Property" type="object" class="btn-primary" />
+                <button name="assign_matched_properties" string="Auto Match" type="object" class="btn-secondary" />
+            </xpath>
+            <xpath expr="//button[@name='action_schedule_meeting']" position="after">
+                <button class="oe_stat_button" type="object" name="action_view_matched_property" icon="fa-pencil-square-o" attrs="{'invisible': [('type', '=', 'lead')]}">
+                        <field name="property_count" widget="statinfo" string="Property"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="new" string="Property Preferences">
+                    <group>
+                        <group name="property" string="Property Preference">
+                            <field name="property_type_id" />
+                            <field name="property_unit_type_id" />
+                            <field name="property_id" />
+                            <field name="product_id" />
+                            <field name="property_unit_area" string="Size (in Sq. ft)"/>
+                        </group>
+                        <group name="location" string="Location Preference">
+                            <field name="city" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>
