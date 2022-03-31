@@ -107,7 +107,8 @@ class OPPropertyAmenities(models.Model):
     _order = "id desc"
     
     name = fields.Char(string='Name', required=True)
-        
+    percent = fields.Float(string='Premium Percent', required=True)
+    
 class OPProperty(models.Model):
     _name = 'op.property'
     _description = 'Property'

@@ -28,3 +28,5 @@ access_product_template_feature_line,access.product.template.feature.line,model_
 access_product_template_feature_line_user,access.product.template.feature.line.user,model_product_template_feature_line,de_property.group_property_user,1,1,1,1
 
 access_op_premium_factor,access.op.premium.factor,model_op_premium_factor,,1,1,1,1
+access_assign_dealer_wizard,access.assign.dealer.wizard,model_assign_dealer_wizard,,1,1,1,1
+access_assign_token_wizard,access.assign.token.wizard,model_assign_token_wizard,,1,1,1,1
