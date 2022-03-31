@@ -1,8 +1,0 @@
-<odoo>
-    <data>
-        
-   
-        <menuitem id="property_balloting_property" name="Property" parent="menu_property_balloting_config" action="de_property.action_property" sequence="20"/>
-        
-    </data>
-</odoo>
