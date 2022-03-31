@@ -16,6 +16,8 @@ class saleorder(models.Model):
              self.phone = self.partner_id.phone
              self.mobile = self.partner_id.mobile
              self.Nominee_line_ids=self.partner_id.Nominee_line_ids
+                
+   
              
                 
     
@@ -39,5 +41,13 @@ class SaleOrderLine(models.Model):
     plot_type = fields.Char(string="Plot Type")
     rate_area_marla = fields.Char(string='Rate Area Marla')
     size = fields.Char(string="Size")
+    
+    
+    @api.onchange('product_id')
+    def _onchange_partner(self):
+        if self.product_id:
+            self.plot_type = self.product_id.property_type_id.name
+            self.rate_area_marla = self.product_id.plot_file
+            self.size = self.product_id.plot_area_marla
     
 
