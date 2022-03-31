@@ -20,12 +20,15 @@
     'version': '15.0.0.2',
     'sequence': 160,
     # any module necessary for this one to work correctly
-    'depends': ['base','product','stock','sale'],
+    'depends': ['base','product','stock','sale','de_dealer','account'],
 
     # always loaded
     'data': [
         'security/property_security.xml',
         'security/ir.model.access.csv',
+        'data/ir_server_data.xml',
+        'wizard/assign_dealer_wizard.xml',
+        'wizard/assign_token_wizard.xml',
         'views/menuitem_views.xml',
         'views/property_views.xml',
         'views/product_views.xml',
