@@ -125,7 +125,7 @@ class ProductTemplate(models.Model):
     plot_type = fields.Selection([
         ('plot file', 'Plot File')
     ], default='plot file')
-    plot_file = fields.Char(string="Rate Per Marla")
+    plot_file = fields.Float(string="Rate Per Marla")
     property_amenities_id = fields.Many2one("op.property.amenities", string="Amenities")
     property_unit_feature_group_ids = fields.Many2many("op.property.unit.feature.group", string="Feature Groups", )
     amenities_percent = fields.Float(string='Premium', compute='_compute_property_amenities')
@@ -140,7 +140,7 @@ class ProductTemplate(models.Model):
 
     plot_size = fields.Char(string='Plot Size')
     road_width = fields.Char(string='Road Width')                       
-    plot_area_marla = fields.Char(string='Plot Area in Marla')
+    plot_area_marla = fields.Float(string='Plot Area in Marla')
     plot_area_sft = fields.Char(string='Plot Area in sft')
     
 
