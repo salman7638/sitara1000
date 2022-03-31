@@ -9,18 +9,20 @@ class AssignTokenWizard(models.TransientModel):
     
 
     token_amount = fields.Float(string='Token Amount', required=True)
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', required=True)
+    date = fields.Date(string='Date', required=True, default=fields.date.today())
+    check_number = fields.Char(string='Check Number')
+    journal_id = fields.Many2one('account.journal', string='Journal', required=True, domain=[('type','in',('bank','cash'))])
     product_ids = fields.Many2many('product.product', string='Plot')
     
     def action_assign_token(self):
         vals = {
-            'partner_id': self.partner_id.id,            
+            'partner_id': self.partner_id.id,
             'date': self.date,
-            'journal_id': self.env['account.journal'].search([('company_id','=',self.employee_id.company_id.id),('name','=','Blank Journal')], limit=1).id,
-            'amount': self.amount,
-            'ref': self.description,
-            'payment_type': 'outbound',
-            'partner_type': 'supplier',
+            'journal_id': self.journal_id.id,
+            'amount': self.token_amount,
+            'ref': self.check_number,
+            'payment_type': 'inbound',
             }
         record = self.env['account.payment'].sudo().create(vals)
         
@@ -29,5 +31,9 @@ class AssignTokenWizard(models.TransientModel):
                 'payment_ids':  record.ids,
                 'state': 'reserved',
             })
+            if not line.partner_id:
+                line.update({
+                'partner_id':  self.partner_id.id,
+                })    
         
         

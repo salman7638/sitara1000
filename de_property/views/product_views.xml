@@ -222,15 +222,14 @@
                                 </group>
                             </page>
                             <page name="paymnet_tab" string="Payments Details">
-                                <field name='payment_ids'>
-                                    <tree>
-                                       <field name='date'/> 
-                                       <field name='name'/> 
-                                       <field name='journal_id' string='Bank'/> 
-                                       <field name='partner_id' string='Customer'/> 
-                                       <field name='amount' />   
-                                    </tree>
-                                </field>
+                                <field name='payment_ids' readonly='1'/>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="amount_paid">
+                                    <field name="amount_paid" />
+                                    <field name="amount_residual" />
+                                    
+                                </group>
+                                
+                                <div class="oe_clear"/>
                             </page>    
                             <page name="variants" string="Attributes &amp; Variants" groups="product.group_product_variant" invisible="1">
                                 <field name="attribute_line_ids" widget="one2many" context="{'show_attribute': False}">

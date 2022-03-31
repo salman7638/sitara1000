@@ -2,6 +2,58 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
+
+
+class ProductTemplate(models.Model):
+    _inherit = "product.product"
+    
+    def action_unreserve_token(self):
+        for line in self:
+            if line.state in ('unconfirm', 'reserved'):
+                line.update({
+                    'state': 'available',
+                    'partner_id': False,
+                })
+                if line.payment_ids:
+                    for pay in line.payment_ids:
+                        pay.action_cancel()
+                    line.payment_ids.unlink()    
+            else:
+                raise UserError('You are not Allow to Unreserve This Product!')
+    
+
+    
+    def action_assign_token(self):
+        for rec in self:
+            selected_ids = rec.env.context.get('active_ids', [])
+            selected_records = rec.env['product.product'].browse(selected_ids)
+        return {
+            'name': ('Assign Token Payment'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'assign.token.wizard',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_product_ids': selected_records.ids,'default_partner_id': self.partner_id.id},
+        }
+    
+    def action_assign_partner(self):
+        for rec in self:
+            selected_ids = rec.env.context.get('active_ids', [])
+            selected_records = rec.env['product.product'].browse(selected_ids)
+        return {
+            'name': ('Assign Dealer/Customer'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'assign.dealer.wizard',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_product_ids': selected_records.ids},
+        }
+    
 
 
 class ProductTemplate(models.Model):
@@ -22,60 +74,33 @@ class ProductTemplate(models.Model):
         ], string='Status', required=True, readonly=True, copy=False, tracking=True,
         default='available')
     
-    def action_unreserve_token(self):
+    amount_paid = fields.Float(string='Amount Paid', compute='compute_amount_total')
+    amount_residual = fields.Float(string='Amount Due')
+    
+    @api.depends('amount_paid', 'amount_residual', 'list_price')
+    def compute_amount_total(self):
         for line in self:
-            if line.state in ('unconfirm', 'reserved'):
-                line.update({
-                    'state': 'available',
-                })
-                if line.payment_ids:
-                    for pay in line.payment_ids:
-                        pay.action_cancel()
-                    line.payment_ids.unlink()    
-            else:
-                raise UserError('You are not Allow to Unreserve This Product!')
+            amount_paid = 0
+            amount_residual = 0
+            for  pay in line.payment_ids:
+                amount_paid += pay.amount 
+            amount_residual =   line.list_price - amount_paid  
+            line.amount_paid = amount_paid
+            line.amount_residual = amount_residual
+
     
-    def action_assign_token(self):
-        for rec in self:
-            selected_ids = rec.env.context.get('active_ids', [])
-            selected_records = rec.env['product.product'].browse(selected_ids)
-        return {
-            'name': ('Assign Dealer'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'assign.token.wizard',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': {'default_product_ids': selected_records.ids},
-        }
-    
-    def action_assign_partner(self):
-        for rec in self:
-            selected_ids = rec.env.context.get('active_ids', [])
-            selected_records = rec.env['product.product'].browse(selected_ids)
-        return {
-            'name': ('Assign Dealer/Customer'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'assign.dealer.wizard',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': {'default_product_ids': selected_records.ids},
-        }
-    
+
     
     @api.constrains('partner_id')
     def _check_partner(self):
         for line in self:
             if line.partner_id:
                 if line.partner_id.active_dealer==True:
-                    line.partner_ref='Dealer'
+                    line.partner_role='Dealer'
                 else:
-                    line.partner_ref='Customer'
+                    line.partner_role='Customer'
             else:
-                line.partner_ref=' '
+                line.partner_role=' '
                     
 
     @api.depends('plot_area_marla','plot_file', 'property_amenities_id')
@@ -92,7 +117,7 @@ class ProductTemplate(models.Model):
     
     property_id = fields.Many2one('op.property', string='Property')
     
-    payment_ids = fields.Many2many('account.payment', string='Payments')
+    payment_ids = fields.Many2many('account.payment', string='Payments', copy=False)
     
     property_location_id = fields.Many2one('op.property.location', string='Location')
     property_type_id = fields.Many2one('op.property.type')

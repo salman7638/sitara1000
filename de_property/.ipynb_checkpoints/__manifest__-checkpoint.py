@@ -26,6 +26,7 @@
     'data': [
         'security/property_security.xml',
         'security/ir.model.access.csv',
+        'data/ir_server_data.xml',
         'wizard/assign_dealer_wizard.xml',
         'wizard/assign_token_wizard.xml',
         'views/menuitem_views.xml',
