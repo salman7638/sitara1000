@@ -11,7 +11,7 @@ class RegisterPayWizard(models.TransientModel):
     token_amount = fields.Float(string='Amount', required=True)
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
     date = fields.Date(string='Date', required=True, default=fields.date.today())
-    installment_id = fields.Many2one('order.installment.line', string='Installment', domain=[('order_id','=',)])
+    installment_id = fields.Many2one('order.installment.line', string='Installment')
     check_number = fields.Char(string='Check Number')
     type = fields.Selection([
         ('fee', 'Fee'),
@@ -22,6 +22,7 @@ class RegisterPayWizard(models.TransientModel):
     
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, domain=[('type','in',('bank','cash'))])
     sale_id = fields.Many2one('sale.order', string='Order')
+    
     
     def action_confirm(self):
         vals = {
