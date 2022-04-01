@@ -1,0 +1,65 @@
+<odoo>
+  <data>
+      
+        <record id="sale_order_form_view_payments" model="ir.ui.view">
+			<field name="name">sale.order.form.view.payments</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form"/>
+			 <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="replace">
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,booked,sale"/>
+                </xpath> 
+                 
+                <xpath expr="//header" position="inside">
+                    
+                    <button name="action_register_payment"  type="object" string="Register Payment" attrs="{'invisible': ['!', ('state', 'in', ['done','cancel']),('amount_residual','&lt;=', 0)]}"  class="oe_highlight" />
+                    
+                    <button name="action_confirm_booking"  type="object" string="Confirm Booking" attrs="{'invisible': [('state', 'not in', ['draft','sent'])]}"   />
+                    
+                    <button name="action_register_allottment"  type="object" string="Confirm Allottment"  attrs="{'invisible': [('state', 'not in', ['booked'])]}"  class="oe_highlight" />   
+                    
+                    <button name="action_generate_installment"  type="object" string="Generate Installment"  attrs="{'invisible': [('state', 'not in', ['sale'])]}" class="oe_highlight" />
+                    
+                </xpath>                 
+                 <xpath expr="//header//button[@name='action_confirm']" position="replace">
+                     <button name="action_confirm" data-hotkey="v" string="Confirm" type="object"  invisible='1'/>
+                 </xpath>
+                 
+                <xpath expr="//button[@name='action_confirm']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath> 
+                 <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+                    <attribute name='invisible'>1</attribute>
+                </xpath> 
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="amount_paid" />
+                    <field name="amount_residual" />
+                    <field name="received_percent" />
+                </xpath>    
+                 
+                <xpath expr="//div[@name='button_box']" position="inside">
+                     <button name="action_view_payments" type="object" class="oe_stat_button" state='done' icon="fa-pencil-square-o"  attrs="{'invisible': [('bill_count', '=', 0)]}">
+                        <field name="bill_count" widget="statinfo" string="Payments"/>
+                     </button>  
+                </xpath>
+                 <xpath expr="//notebook" position="inside">
+                     <page string='Installments' >
+                      <field name="installment_line_ids" >
+                         <tree >
+                            <field name="name" /> 
+                            <field name="date" /> 
+                            <field name="payment_date" /> 
+                            <field name="amount_paid" />  
+                            <field name="amount_residual" />   
+                            <field name="remarks" />   
+                            <field name="order_id" invisible='1' />    
+                         </tree>                         
+                     </field> 
+                   </page>      
+                </xpath>
+                 
+             </field>
+          </record> 
+      
+  </data>
+</odoo>
