@@ -226,6 +226,7 @@
                                 <group class="oe_subtotal_footer oe_right" colspan="2" name="amount_paid">
                                     <field name="amount_paid" />
                                     <field name="commission_amount" />
+                                    <field name="discount_amount" />
                                     <field name="amount_residual" />
                                     
                                 </group>
