@@ -31,7 +31,9 @@ class RegisterInstallmentWizard(models.TransientModel):
             }
             installment_vals = self.env['order.installment.line'].create(vals)
             installment_date = installment_date + timedelta(installment_days)
-        
-            
+        for sale in self.sale_id:
+            sale.update({
+                'installment_created': True,
+            })    
         
         

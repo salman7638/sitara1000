@@ -6,7 +6,7 @@ class ProductCategory(models.Model):
     _inherit = 'product.category'
     
     process_fee = fields.Float(string='Processing Fee')
-    allottment_fee = fields.Float(string='Allottment Fee')
+    allottment_fee = fields.Float(string='Membership Fee')
     
     
     
