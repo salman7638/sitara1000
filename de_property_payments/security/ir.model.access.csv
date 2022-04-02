@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_order_installment_line,access.order.installment.line,model_order_installment_line,,1,1,1,1
+access_register_pay_wizard,access.register.pay.wizard,model_register_pay_wizard,,1,1,1,1
+access_register_installment_wizard,access.register.installment.wizard,model_register_installment_wizard,,1,1,1,1
