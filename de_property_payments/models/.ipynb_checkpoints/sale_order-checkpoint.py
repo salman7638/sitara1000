@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
         }
     
     @api.constrains('amount_residual')
-    def _check_state(self):
+    def _check_amount_residual(self):
         for line in self:
             if line.amount_residual<=0:
                 for order_line in line.order_line:
@@ -28,17 +28,11 @@ class SaleOrder(models.Model):
                     })            
             if line.amount_paid >= ((line.amount_residual+line.amount_paid)/100) * 10:
                 line.received_percent = 10
+                line.action_confirm_booking()
             if line.amount_paid >= ((line.amount_residual+line.amount_paid)/100) * 25:
                 line.received_percent = 25
-                
-            
-    @api.constrains('received_percent')
-    def _check_received_percent(self):
-        for line in self:
-            if line.received_percent>=10:
-                line.action_confirm_booking()
-            elif line.received_percent>=25:
-                line.action_register_allottment()    
+                line.action_register_allottment()  
+                   
            
     def get_bill_count(self):
         count = self.env['account.payment'].search_count([('order_id', '=', self.id)])
@@ -72,7 +66,7 @@ class SaleOrder(models.Model):
             payments = self.env['account.payment'].search([('order_id','=',self.id),('state','in',('draft','posted'))])
             for pay in payments:
                 if pay.type!='fee':
-                    total_paid_amount += pay.amount            
+                    total_paid_amount += pay.amount  
             residual_amount = self.amount_total - total_paid_amount 
             line.update({
                 'amount_paid':  total_paid_amount,
@@ -85,22 +79,17 @@ class SaleOrder(models.Model):
         installment_line=0
         if self.state=='draft':
             type='book'
-            amount_calc=(((self.amount_residual+self.amount_paid)/100)*10) - self.amount_paid
-            if self.amount_paid > 0:
-               amount_calc = amount_calc 
-            if amount_calc < 0:
-                amount_calc = 0
+            total_amount=self.amount_residual + self.amount_paid
+            amount_calc=(((total_amount)/100)*10)
         if self.state=='booked': 
             amount_calc=(((self.amount_residual+self.amount_paid)/100)*25) - self.amount_paid
             type='allott'
         if self.state=='sale' and self.installment_line_ids:
-            amount_calc = 0
             for installment_line in self.installment_line_ids:
-                if     installment_line.amount_residual > 0:
+                if  installment_line.amount_residual > 0:
                     amount_calc=installment_line.amount_residual
                     installment_line=installment_line.id
                     break
-            
         return {
             'name': ('Register Payment'),
             'view_type': 'form',
@@ -109,7 +98,12 @@ class SaleOrder(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_sale_id': self.id, 'default_partner_id': self.partner_id.id, 'default_token_amount':  amount_calc,'default_type': type,'default_installment_id': installment_line},
+            'context': {'default_sale_id': self.id, 
+                        'default_partner_id': self.partner_id.id, 
+                        'default_token_amount':  amount_calc,
+                        'default_type': type,
+                        'default_installment_id': installment_line,
+                       },
         }
     
     def action_confirm_booking(self):
@@ -121,6 +115,7 @@ class SaleOrder(models.Model):
                 line_product.product_id.update({
                     'state': 'booked',
                     'commission_amount': line_product.comission_amount,
+                    'discount_amount': line_product.discount,
                 })
     
     def action_register_allottment(self):

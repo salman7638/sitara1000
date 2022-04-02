@@ -98,10 +98,10 @@ class RegisterPayWizard(models.TransientModel):
             if self.installment_id.amount_residual==self.token_amount:
                 status= 'Paid'
             self.installment_id.update({
-                'amount_paid': self.token_amount,
+                'amount_paid': self.installment_id.amount_paid + self.token_amount,
                 'payment_date':self.date,
                 'remarks': status ,
             })    
             self.installment_id.update({
-                'amount_residual': self.installment_id.amount_residual - self.installment_id.amount_paid
+                'amount_residual': self.installment_id.amount_residual - self.token_amount
             })
