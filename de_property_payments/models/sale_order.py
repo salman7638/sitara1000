@@ -17,16 +17,15 @@ class SaleOrder(models.Model):
          'res_model': 'account.payment',
          'view_mode': 'tree,form',
         }
-               
-            
-                   
-           
+                       
     def get_bill_count(self):
         count = self.env['account.payment'].search_count([('order_id', '=', self.id)])
         self.bill_count = count
         
     bill_count = fields.Integer(string='Payments', compute='get_bill_count')
     amount_paid = fields.Float(string='Amount Paid', compute='_compute_property_amount')
+    booking_amount_residual = fields.Float(string='Booking Amount Due')
+    allotment_amount_residual = fields.Float(string='Allotment Amount Due')
     amount_residual = fields.Float(string='Amount Due')
     received_percent = fields.Float(string='Percentage')
     state = fields.Selection([
@@ -40,6 +39,8 @@ class SaleOrder(models.Model):
     installment_line_ids = fields.One2many('order.installment.line', 'order_id' , string='Installment')
     installment_created=fields.Boolean(string='Installment Generated')
 
+    
+    @api.depends('amount_paid','amount_residual','booking_amount_residual','allotment_amount_residual','received_percent')
     def _compute_property_amount(self):
         for line in self:
             total_paid_amount=0
@@ -52,7 +53,7 @@ class SaleOrder(models.Model):
             for order_line in  self.order_line:
                 order_line.product_id.update({
                     'commission_amount': order_line.comission_amount,
-                    'discount_amount': (order_line.price_subtotal/100)* order_line.discount ,
+                    'discount_amount': (order_line.price_subtotal/100) * order_line.discount ,
                 })
                 for pay_line in order_line.product_id.payment_ids:
                     pay_line.update({
@@ -62,10 +63,14 @@ class SaleOrder(models.Model):
             for pay in payments:
                 if pay.type!='fee':
                     total_paid_amount += pay.amount  
-            residual_amount = self.amount_total - total_paid_amount 
+            residual_amount = self.amount_total - total_paid_amount
+            booking_amount = (((line.amount_residual + line.amount_paid)/100) * 10) - line.amount_paid
+            allotment_amount = (((line.amount_residual + line.amount_paid)/100) * 25) - line.amount_paid
             line.update({
                 'amount_paid':  total_paid_amount,
                 'amount_residual':  residual_amount,
+                'booking_amount_residual':  booking_amount if booking_amount > 0 else 0,
+                'allotment_amount_residual': allotment_amount if allotment_amount > 0 else 0,
             })
             if line.amount_paid >= ((line.amount_residual+line.amount_paid)/100) * 10:
                 line.received_percent = 10
@@ -105,7 +110,6 @@ class SaleOrder(models.Model):
             'context': {'default_sale_id': self.id, 
                         'default_partner_id': self.partner_id.id, 
                         'default_token_amount':  amount_calc,
-                        'default_allow_amount':  allow_amount,
                         'default_type': type,
                         'default_installment_id': installment_line,
                        },
@@ -178,6 +182,7 @@ class OrderInstallmentLine(models.Model):
     
     name = fields.Char(string='Description')
     date = fields.Date(string='Due Date')
+    total_amount = fields.Float(string='Total Amount')
     payment_date = fields.Date(string='Payment Date')
     amount_paid = fields.Float(string='Amount Paid')
     amount_residual = fields.Float(string='Amount Due')

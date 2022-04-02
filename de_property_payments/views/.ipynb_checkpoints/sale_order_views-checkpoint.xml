@@ -30,6 +30,12 @@
                  <xpath expr="//button[@name='action_quotation_send']" position="attributes">
                     <attribute name='invisible'>1</attribute>
                 </xpath> 
+                 
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="booking_amount_residual"  readonly='1' />
+                    <field name="allotment_amount_residual"  readonly='1' />
+                </xpath>   
+                 
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="amount_paid" />
                     <field name="installment_created"  invisible='1'/>
@@ -52,8 +58,9 @@
                       <field name="installment_line_ids" readonly='1'>
                          <tree >
                             <field name="name" /> 
-                            <field name="date" /> 
+                            <field name="date" />
                             <field name="payment_date" /> 
+                            <field name="total_amount" /> 
                             <field name="amount_paid" />  
                             <field name="amount_residual" />   
                             <field name="remarks" />   

@@ -93,20 +93,63 @@ class RegisterPayWizard(models.TransientModel):
                  'order_id': self.sale_id.id,
                  'type': 'fee',
                  }
-                record = self.env['account.payment'].sudo().create(vals) 
-             
-                
-        if self.installment_id:
-            if self.allow_amount < self.token_amount:
-                raise UserError('You are not Allow to Enter amount Greater than! '+str(self.allow_amount))
+                record = self.env['account.payment'].sudo().create(vals)                              
+        if self.installment_id:            
             status= 'Partial Payment'
-            if self.installment_id.amount_residual==self.token_amount:
-                status= 'Paid'
-            self.installment_id.update({
+            installment_amount = self.installment_id.amount_residual - self.token_amount 
+            if installment_amount > 0:
+                self.installment_id.update({
                 'amount_paid': self.installment_id.amount_paid + self.token_amount,
                 'payment_date':self.date,
                 'remarks': status ,
-            })    
-            self.installment_id.update({
+                })    
+                self.installment_id.update({
                 'amount_residual': self.installment_id.amount_residual - self.token_amount
-            })
+                })
+            elif installment_amount==0:
+                self.installment_id.update({
+                'remarks': 'Paid' ,
+                })             
+            elif installment_amount < 0:
+                self.installment_id.update({
+                'amount_paid': self.installment_id.amount_paid + self.installment_id.amount_residual,
+                'payment_date':self.date,
+                'remarks': 'Paid' ,
+                })    
+                self.installment_id.update({
+                'amount_residual': 0
+                })
+                remaining_amount = self.token_amount - self.installment_id.amount_residual  
+                for installment_line in self.sale_id.installment_line_ids:
+                    if installment_line.amount_residual > 0:
+                        if installment_line.amount_residual < remaining_amount:
+                            installment_line.update({
+                            'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
+                            'payment_date':self.date,
+                            'remarks': 'Paid' ,
+                            })    
+                            installment_line.update({
+                            'amount_residual': 0
+                            })    
+                        elif installment_line.amount_residual == remaining_amount:    
+                            installment_line.update({
+                            'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
+                            'payment_date':self.date,
+                            'remarks': 'Paid' ,
+                            })    
+                            installment_line.update({
+                            'amount_residual': 0
+                            })
+                            break
+                        elif installment_line.amount_residual > remaining_amount:   
+                            installment_line.update({
+                            'amount_paid': installment_line.amount_paid + remaining_amount,
+                            'payment_date':self.date,
+                            'remarks': 'Partial Payment' ,
+                            })    
+                            installment_line.update({
+                            'amount_residual': installment_line.amount_residual - installment_line.amount_paid 
+                            })
+                            break
+                            
+                            
