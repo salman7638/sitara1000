@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+
 
 class RegisterPayWizard(models.TransientModel):
     _name = "register.pay.wizard"
@@ -11,6 +13,7 @@ class RegisterPayWizard(models.TransientModel):
     token_amount = fields.Float(string='Amount', required=True)
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
     date = fields.Date(string='Date', required=True, default=fields.date.today())
+    allow_amount = fields.Float(string='Allow Amount')
     installment_id = fields.Many2one('order.installment.line', string='Installment')
     check_number = fields.Char(string='Check Number')
     type = fields.Selection([
@@ -94,6 +97,8 @@ class RegisterPayWizard(models.TransientModel):
              
                 
         if self.installment_id:
+            if self.allow_amount < self.token_amount:
+                raise UserError('You are not Allow to Enter amount Greater than! '+str(self.allow_amount))
             status= 'Partial Payment'
             if self.installment_id.amount_residual==self.token_amount:
                 status= 'Paid'

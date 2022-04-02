@@ -10,6 +10,7 @@
                       <group>
                           <field name="token_amount" />
                            <field name="date" />
+                           <field name="allow_amount" invisible='1' />
                            <field name="partner_id" />
                            <field name="installment_id" readonly='1'/>
                       </group>

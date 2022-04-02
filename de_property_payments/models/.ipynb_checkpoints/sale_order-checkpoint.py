@@ -52,7 +52,7 @@ class SaleOrder(models.Model):
             for order_line in  self.order_line:
                 order_line.product_id.update({
                     'commission_amount': order_line.comission_amount,
-                    'discount_amount': order_line.discount,
+                    'discount_amount': (order_line.price_subtotal/100)* order_line.discount ,
                 })
                 for pay_line in order_line.product_id.payment_ids:
                     pay_line.update({
@@ -77,6 +77,7 @@ class SaleOrder(models.Model):
             
     def action_register_payment(self):
         amount_calc=0
+        allow_amount=0
         type='installment'
         installment_line=0
         if self.state=='draft':
@@ -90,6 +91,7 @@ class SaleOrder(models.Model):
             for installment_line in self.installment_line_ids:
                 if  installment_line.amount_residual > 0:
                     amount_calc=installment_line.amount_residual
+                    allow_amount=installment_line.amount_residual
                     installment_line=installment_line.id
                     break
         return {
@@ -103,6 +105,7 @@ class SaleOrder(models.Model):
             'context': {'default_sale_id': self.id, 
                         'default_partner_id': self.partner_id.id, 
                         'default_token_amount':  amount_calc,
+                        'default_allow_amount':  allow_amount,
                         'default_type': type,
                         'default_installment_id': installment_line,
                        },
@@ -117,7 +120,7 @@ class SaleOrder(models.Model):
                 line_product.product_id.update({
                     'state': 'booked',
                     'commission_amount': line_product.comission_amount,
-                    'discount_amount': line_product.discount,
+                    'discount_amount':  (line_product.price_subtotal/100)* line_product.discount,
                 })
     
     def action_register_allottment(self):
@@ -129,7 +132,7 @@ class SaleOrder(models.Model):
                 line_product.product_id.update({
                     'state': 'un_posted_sold',
                     'commission_amount': line_product.comission_amount,
-                    'discount_amount': line_product.discount,
+                    'discount_amount': (line_product.price_subtotal/100)* line_product.discount,
                 })
     
     def action_generate_installment(self):
@@ -149,6 +152,7 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
     
     comission_amount = fields.Float(string='Comission Amount')
+    
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
     def _compute_amount(self):
