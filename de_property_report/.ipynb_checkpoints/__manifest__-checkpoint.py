@@ -29,8 +29,8 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/views.xml',
         'views/templates.xml',
+#         'views/sale_order_views.xml',
         'report/booking_report.xml',
         'report/booking_template.xml',
         'report/allotment_report.xml',
