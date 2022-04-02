@@ -8,17 +8,16 @@
 			 <field name="arch" type="xml">
                 <xpath expr="//field[@name='state']" position="replace">
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,booked,sale"/>
-                </xpath> 
-                 
+                </xpath>                  
                 <xpath expr="//header" position="inside">
                     
-                    <button name="action_register_payment"  type="object" string="Register Payment" attrs="{'invisible': ['!', ('state', 'in', ['done','cancel']),('amount_residual','&lt;=', 0)]}"  class="oe_highlight" />
+                      <button name="action_register_payment"  type="object" string="Register Payment" attrs="{'invisible': ['!', ('state', 'in', ['done','cancel']),('amount_residual','&lt;=', 0)]}"  class="oe_highlight" />
                     
-                    <button name="action_confirm_booking"  type="object" string="Confirm Booking" attrs="{'invisible': [('state', 'not in', ['draft','sent'])]}"   />
+                      <button name="action_confirm_booking"  type="object" string="Confirm Booking" invisible='1'  />
                     
-                    <button name="action_register_allottment"  type="object" string="Confirm Allottment"  attrs="{'invisible': [('state', 'not in', ['booked'])]}"  class="oe_highlight" />   
+                      <button name="action_register_allottment"  type="object" string="Confirm Allottment"  invisible='1'  class="oe_highlight" />   
                     
-                    <button name="action_generate_installment"  type="object" string="Generate Installment"  attrs="{'invisible': [('state', 'not in', ['sale'])]}" class="oe_highlight" />
+                      <button name="action_generate_installment"  type="object" string="Generate Installment"  attrs="{'invisible': ['|', ('state', 'not in', ['sale']),('installment_created','=',True)]}" class="oe_highlight" />
                     
                 </xpath>                 
                  <xpath expr="//header//button[@name='action_confirm']" position="replace">
@@ -33,8 +32,14 @@
                 </xpath> 
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="amount_paid" />
-                    <field name="amount_residual" />
-                    <field name="received_percent" />
+                    <field name="installment_created"  invisible='1'/>
+                    <field name="amount_residual" readonly='1'/>
+                    <field name="create_date" invisible='1'/>
+                    <field name="received_percent" invisible='1' />
+                </xpath>    
+                 
+                <xpath expr="//field['order_line']//tree//field[@name='price_subtotal']" position="before">
+                    <field name="comission_amount" />
                 </xpath>    
                  
                 <xpath expr="//div[@name='button_box']" position="inside">
@@ -44,7 +49,7 @@
                 </xpath>
                  <xpath expr="//notebook" position="inside">
                      <page string='Installments' >
-                      <field name="installment_line_ids" >
+                      <field name="installment_line_ids" readonly='1'>
                          <tree >
                             <field name="name" /> 
                             <field name="date" /> 

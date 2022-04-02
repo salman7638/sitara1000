@@ -12,15 +12,17 @@ class RegisterInstallmentWizard(models.TransientModel):
     
 
     number_of_installment = fields.Integer(string='Number Of Installment', required=True)
-    installment_start_date = fields.Date(string='Installment Start Date', required=True, default=fields.date.today() )
     sale_id = fields.Many2many('sale.order', string='Order')
     
     def action_confirm(self):
         installment_days =(921/self.number_of_installment)
-        installment_date = self.installment_start_date
+        installment_date = fields.date.today()
+        for sale in self.sale_id:            
+            installment_date = self.sale_id.date_order
         installment_count = 0
         for installment in range(self.number_of_installment):            
             installment_count += 1
+            installment_date = installment_date + timedelta(installment_days)
             vals = {
                 'name':  'Installment Number '+str(installment_count),
                 'date':  installment_date,
@@ -30,8 +32,10 @@ class RegisterInstallmentWizard(models.TransientModel):
                 'remarks': 'Pending',
             }
             installment_vals = self.env['order.installment.line'].create(vals)
-            installment_date = installment_date + timedelta(installment_days)
-        
             
+        for sale in self.sale_id:
+            sale.update({
+                'installment_created': True,
+            })    
         
         
