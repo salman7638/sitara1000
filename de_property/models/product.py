@@ -76,6 +76,7 @@ class ProductTemplate(models.Model):
     
     amount_paid = fields.Float(string='Amount Paid', compute='compute_amount_total')
     amount_residual = fields.Float(string='Amount Due')
+    commission_amount = fields.Float(string='Commission Amount')
     
     @api.depends('amount_paid', 'amount_residual', 'list_price')
     def compute_amount_total(self):
@@ -83,8 +84,9 @@ class ProductTemplate(models.Model):
             amount_paid = 0
             amount_residual = 0
             for  pay in line.payment_ids:
-                amount_paid += pay.amount 
-            amount_residual =   line.list_price - amount_paid  
+                if pay.state in ('draft','posted'):
+                    amount_paid += pay.amount 
+            amount_residual =   line.list_price - amount_paid  - line.commission_amount  
             line.amount_paid = amount_paid
             line.amount_residual = amount_residual
 
