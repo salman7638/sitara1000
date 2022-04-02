@@ -22,6 +22,7 @@ class AssignTokenWizard(models.TransientModel):
             'journal_id': self.journal_id.id,
             'amount': self.token_amount,
             'ref': self.check_number,
+            'type':  'token',
             'payment_type': 'inbound',
             }
         record = self.env['account.payment'].sudo().create(vals)

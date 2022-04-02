@@ -62,6 +62,8 @@ class ProductTemplate(models.Model):
     premium_id = fields.Many2one('op.premium.factor', string='Premium')
     standard_price = fields.Float(string="Standard price")
     list_price = fields.Float(compute='_compute_sum')
+    booking_amount = fields.Float(string='Booking Amount')
+    allottment_amount = fields.Float(string='Allottment Amount')
     partner_id = fields.Many2one('res.partner', string='Dealer/Customer')
     partner_role = fields.Char( string='Role')
     state = fields.Selection(selection=[
@@ -113,10 +115,12 @@ class ProductTemplate(models.Model):
         for line in self:
             if float(line.plot_area_marla) > 0.0 and float(line.plot_file) > 0.0:
                 total_amount = float(line.plot_area_marla) * float(line.plot_file)
-                line.list_price = total_amount + (line.property_amenities_id.percent * (total_amount / 100))    
+                line.list_price = total_amount + (line.property_amenities_id.percent * (total_amount / 100))   
             else:
                 line.list_price=0
-   
+            line.booking_amount= ((line.list_price)/100)*10   
+            line.allottment_amount= ((line.list_price)/100)*15   
+            
     can_be_property = fields.Boolean(string="Can be Property", compute='_compute_can_be_property',
         store=True, readonly=False, help="Specify whether the product can be selected in a property.")
     
