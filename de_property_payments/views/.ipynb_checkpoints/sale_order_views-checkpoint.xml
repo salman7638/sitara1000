@@ -33,7 +33,7 @@
                 <xpath expr="//field[@name='partner_id']" position="after">
                     <field name="amount_paid" />
                     <field name="installment_created"  invisible='1'/>
-                    <field name="amount_residual" />
+                    <field name="amount_residual" readonly='1'/>
                     <field name="create_date" invisible='1'/>
                     <field name="received_percent" invisible='1' />
                 </xpath>    

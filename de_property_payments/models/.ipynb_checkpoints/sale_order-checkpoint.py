@@ -17,21 +17,8 @@ class SaleOrder(models.Model):
          'res_model': 'account.payment',
          'view_mode': 'tree,form',
         }
-    
-    @api.constrains('amount_residual')
-    def _check_amount_residual(self):
-        for line in self:
-            if line.amount_residual<=0:
-                for order_line in line.order_line:
-                    order_line.product_id.update({
-                         'state':  'posted_sold',
-                    })            
-            if line.amount_paid >= ((line.amount_residual+line.amount_paid)/100) * 10:
-                line.received_percent = 10
-                line.action_confirm_booking()
-            if line.amount_paid >= ((line.amount_residual+line.amount_paid)/100) * 25:
-                line.received_percent = 25
-                line.action_register_allottment()  
+               
+            
                    
            
     def get_bill_count(self):
@@ -57,11 +44,19 @@ class SaleOrder(models.Model):
         for line in self:
             total_paid_amount=0
             residual_amount=0
+            if line.amount_residual<=0:
+                for order_line in line.order_line:
+                    order_line.product_id.update({
+                         'state':  'posted_sold',
+                    })
             for order_line in  self.order_line:
+                order_line.product_id.update({
+                    'commission_amount': order_line.comission_amount,
+                    'discount_amount': order_line.discount,
+                })
                 for pay_line in order_line.product_id.payment_ids:
                     pay_line.update({
                         'order_id': self.id,
-                        'type': 'token',
                     })
             payments = self.env['account.payment'].search([('order_id','=',self.id),('state','in',('draft','posted'))])
             for pay in payments:
@@ -72,6 +67,13 @@ class SaleOrder(models.Model):
                 'amount_paid':  total_paid_amount,
                 'amount_residual':  residual_amount,
             })
+            if line.amount_paid >= ((line.amount_residual+line.amount_paid)/100) * 10:
+                line.received_percent = 10
+                line.action_confirm_booking()
+            if line.amount_paid >= ((line.amount_residual+line.amount_paid)/100) * 25:
+                line.received_percent = 25
+                line.action_register_allottment()
+                
             
     def action_register_payment(self):
         amount_calc=0
@@ -126,6 +128,8 @@ class SaleOrder(models.Model):
             for line_product in line.order_line:
                 line_product.product_id.update({
                     'state': 'un_posted_sold',
+                    'commission_amount': line_product.comission_amount,
+                    'discount_amount': line_product.discount,
                 })
     
     def action_generate_installment(self):
@@ -152,7 +156,7 @@ class SaleOrderLine(models.Model):
         Compute the amounts of the SO line.
         """
         for line in self:
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0) - line.comission_amount
+            price = (line.price_unit - line.comission_amount) * (1 - (line.discount or 0.0) / 100.0) 
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
