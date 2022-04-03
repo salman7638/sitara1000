@@ -180,7 +180,7 @@
                                 <group name="product_details">
                                     <group>
                                         <field name="detailed_type"/>
-                                        <field name="booking_id"/>
+                                        <field name="booking_id" readonly='1'/>
                                         <field name="categ_id" string="Unit Category"/>
                                         <field name="property_location_id" string="Location" required="0" options="{'no_create': True}" />
                                         <field name="plot_size"/>
