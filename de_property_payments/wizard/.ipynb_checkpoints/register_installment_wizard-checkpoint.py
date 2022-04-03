@@ -28,12 +28,11 @@ class RegisterInstallmentWizard(models.TransientModel):
                 'date':  installment_date,
                 'amount_paid':   0,
                 'order_id': self.sale_id.id,
-                'total_amount':  (self.sale_id.amount_residual/self.number_of_installment),
-                'amount_residual':  (self.sale_id.amount_residual/self.number_of_installment) ,
+                'total_amount':  (self.sale_id.installment_amount_residual/self.number_of_installment),
+                'amount_residual':  (self.sale_id.installment_amount_residual/self.number_of_installment) ,
                 'remarks': 'Pending',
             }
-            installment_vals = self.env['order.installment.line'].create(vals)
-            
+            installment_vals = self.env['order.installment.line'].create(vals)    
         for sale in self.sale_id:
             sale.update({
                 'installment_created': True,

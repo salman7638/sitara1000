@@ -108,9 +108,19 @@ class RegisterPayWizard(models.TransientModel):
                 })
             elif installment_amount==0:
                 self.installment_id.update({
+                'amount_paid': self.installment_id.amount_paid + self.token_amount,
+                'payment_date':self.date,
+                'remarks': status ,
+                })    
+                self.installment_id.update({
+                'amount_residual': self.installment_id.amount_residual - self.token_amount
+                })
+                self.installment_id.update({
                 'remarks': 'Paid' ,
-                })             
+                }) 
+            # group payment    
             elif installment_amount < 0:
+                remaining_amount = self.token_amount - self.installment_id.amount_residual
                 self.installment_id.update({
                 'amount_paid': self.installment_id.amount_paid + self.installment_id.amount_residual,
                 'payment_date':self.date,
@@ -119,7 +129,8 @@ class RegisterPayWizard(models.TransientModel):
                 self.installment_id.update({
                 'amount_residual': 0
                 })
-                remaining_amount = self.token_amount - self.installment_id.amount_residual  
+                
+#                 raise UserError(str(remaining_amount))
                 for installment_line in self.sale_id.installment_line_ids:
                     if installment_line.amount_residual > 0:
                         if installment_line.amount_residual < remaining_amount:
@@ -148,9 +159,10 @@ class RegisterPayWizard(models.TransientModel):
                             'remarks': 'Partial Payment' ,
                             })    
                             installment_line.update({
-                            'amount_residual': installment_line.amount_residual - installment_line.amount_paid 
+                            'amount_residual': installment_line.amount_residual - remaining_amount
                             })
                             break
+                            
         self.sale_id.action_confirm_booking()
         self.sale_id.action_register_allottment()                    
         self.sale_id._compute_property_amount()                    

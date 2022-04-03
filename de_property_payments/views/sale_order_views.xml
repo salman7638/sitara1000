@@ -41,30 +41,16 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="sale.view_order_form"/>
 			 <field name="arch" type="xml">
-                <xpath expr="//field[@name='state']" position="replace">
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,booked,sale"/>
-                </xpath>                  
-                <xpath expr="//header" position="inside">
+                                
+                <xpath expr="//header" position="replace">
+                    <header>
+                      <button name="action_register_payment"  type="object" string="Register Payment" attrs="{'invisible': ['|', ('state', 'in', ['done','cancel']),('amount_residual','&lt;=', 0)]}"  class="oe_highlight" />  
                     
-                      <button name="action_register_payment"  type="object" string="Register Payment" attrs="{'invisible': ['!', ('state', 'in', ['done','cancel']),('amount_residual','&lt;=', 0)]}"  class="oe_highlight" />
-                    
-                      <button name="action_confirm_booking"  type="object" string="Confirm Booking" invisible='1'  />
-                    
-                      <button name="action_register_allottment"  type="object" string="Confirm Allottment"  invisible='1'  class="oe_highlight" />   
-                    
-                      <button name="action_generate_installment"  type="object" string="Generate Installment"  attrs="{'invisible': ['|', ('state', 'not in', ['sale']),('installment_created','=',True)]}" class="oe_highlight" />
-                    
+                      <button name="action_generate_installment"  type="object" string="Generate Installment"  attrs="{'invisible': ['|', ('state', 'not in', ['booked','sale']),('installment_created','=',True)]}" class="oe_highlight" />
+                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,booked,sale"/>
+                   </header>
                 </xpath>                 
-                 <xpath expr="//header//button[@name='action_confirm']" position="replace">
-                     <button name="action_confirm" data-hotkey="v" string="Confirm" type="object"  invisible='1'/>
-                 </xpath>
-                 
-                <xpath expr="//button[@name='action_confirm']" position="attributes">
-                    <attribute name='invisible'>1</attribute>
-                </xpath> 
-                 <xpath expr="//button[@name='action_quotation_send']" position="attributes">
-                    <attribute name='invisible'>1</attribute>
-                </xpath> 
+                
                  
                 <xpath expr="//field[@name='date_order']" position="after">
                     <field name="amount_paid"  string='Total Amount Paid'/>
@@ -79,7 +65,8 @@
                     <field name="create_date" invisible='1'/>
                     <field name="received_percent" invisible='1' />
                 </xpath>    
-                 
+                <xpath expr="//field['order_line']//tree//field[@name='product_id']" position="replace">                       <field name="product_id" domain="[('product_tmpl_id.state', 'in', ('available','unconfirm','reserved'))]" />
+                </xpath>    
                  
                 <xpath expr="//field['order_line']//tree//field[@name='price_subtotal']" position="before">   
                     <field name="commission_type" />
