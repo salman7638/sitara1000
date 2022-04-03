@@ -151,5 +151,6 @@ class RegisterPayWizard(models.TransientModel):
                             'amount_residual': installment_line.amount_residual - installment_line.amount_paid 
                             })
                             break
-                            
-                            
+        self.sale_id.action_confirm_booking()
+        self.sale_id.action_register_allottment()                    
+        self.sale_id._compute_property_amount()                    

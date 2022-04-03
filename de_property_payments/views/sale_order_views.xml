@@ -1,6 +1,41 @@
 <odoo>
   <data>
       
+    <record id="view_sale_qutation_tree_payments" model="ir.ui.view">
+		<field name="name">sale.order.tree.qutation.pay</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding" />
+		<field name="arch" type="xml">
+            
+			<xpath expr="//field[@name = 'state']" position="before">
+                <field name="amount_paid"  string='Total Amount Paid'/>
+                <field name="amount_residual" string='Total Amount Due' readonly='1'/>
+                <field name="booking_amount_residual"  readonly='1' />
+                <field name="allotment_amount_residual"  readonly='1' />
+                <field name="installment_amount_residual"  string='Installment Amount Due' readonly='1' />
+			</xpath>
+            
+		</field>
+	</record>
+	
+	
+	<record id="view_sale_order_tree_payments" model="ir.ui.view">
+		<field name="name">sale.order.tree.order.pay</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_tree" />
+		<field name="arch" type="xml">            
+			<xpath expr="//field[@name = 'state']" position="before">
+                <field name="amount_paid"  optional='show'/>
+                <field name="amount_residual" optional='show'/>
+                <field name="booking_amount_residual"  optional='hide' />
+                <field name="allotment_amount_residual"  optional='hide'/>
+                <field name="installment_amount_residual"  optional='hide' />
+			</xpath>            
+		</field>
+	</record>
+              
+       
+      
         <record id="sale_order_form_view_payments" model="ir.ui.view">
 			<field name="name">sale.order.form.view.payments</field>
 			<field name="model">sale.order</field>
@@ -32,19 +67,21 @@
                 </xpath> 
                  
                 <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="amount_paid"  string='Total Amount Paid'/>
+                    <field name="amount_residual" string='Total Amount Due' readonly='1'/>
                     <field name="booking_amount_residual"  readonly='1' />
                     <field name="allotment_amount_residual"  readonly='1' />
+                    <field name="installment_amount_residual"  string='Installment Amount Due' readonly='1' />
                 </xpath>   
                  
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="amount_paid" />
                     <field name="installment_created"  invisible='1'/>
-                    <field name="amount_residual" readonly='1'/>
                     <field name="create_date" invisible='1'/>
                     <field name="received_percent" invisible='1' />
                 </xpath>    
                  
-                <xpath expr="//field['order_line']//tree//field[@name='price_subtotal']" position="before">
+                <xpath expr="//field['order_line']//tree//field[@name='price_subtotal']" position="before">   
+                    <field name="commission_type" />
                     <field name="comission_amount" />
                 </xpath>    
                  
