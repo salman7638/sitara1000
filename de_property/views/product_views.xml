@@ -180,6 +180,7 @@
                                 <group name="product_details">
                                     <group>
                                         <field name="detailed_type"/>
+                                        <field name="booking_id"/>
                                         <field name="categ_id" string="Unit Category"/>
                                         <field name="property_location_id" string="Location" required="0" options="{'no_create': True}" />
                                         <field name="plot_size"/>
@@ -284,12 +285,15 @@
                     <field name="name"/>
                     <field name="default_code"/>
                     <field name="partner_id"/>
+                    <field name="booking_id"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="cost_currency_id" invisible="1"/>
                     <field name="priority" optional="hide" widget="priority" nolabel="1"/>
                     <field name="responsible_id" widget="many2one_avatar_user"/>
                     <field name="list_price"/>
                     <field name="amount_paid"/>
+                    <field name="discount_amount"/>
+                    <field name="commission_amount"/>
                     <field name="amount_residual"/>
                     <field name="standard_price" optional="hide"/>
                     <field name="uom_id" optional="hide" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom"/>

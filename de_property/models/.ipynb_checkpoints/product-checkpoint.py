@@ -66,6 +66,7 @@ class ProductTemplate(models.Model):
     allottment_amount = fields.Float(string='Allottment Amount')
     installment_amount = fields.Float(string='Installment Amount')
     partner_id = fields.Many2one('res.partner', string='Dealer/Customer')
+    booking_id = fields.Many2one('sale.order', string='Booking')
     partner_role = fields.Char( string='Role')
     state = fields.Selection(selection=[
             ('available', 'Available'),
