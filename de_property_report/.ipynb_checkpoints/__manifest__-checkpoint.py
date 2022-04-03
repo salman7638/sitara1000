@@ -28,9 +28,9 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
-        'views/templates.xml',
-#         'views/sale_order_views.xml',
+#         'security/ir.model.access.csv',
+#         'wizard/advance_receivable_wizard.xml',
+#         'wizard/plot_status_report.xml',
         'report/booking_report.xml',
         'report/booking_template.xml',
         'report/allotment_report.xml',
