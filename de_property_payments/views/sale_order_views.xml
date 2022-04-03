@@ -80,6 +80,7 @@
                     <field name="received_percent" invisible='1' />
                 </xpath>    
                  
+                 
                 <xpath expr="//field['order_line']//tree//field[@name='price_subtotal']" position="before">   
                     <field name="commission_type" />
                     <field name="comission_amount" />

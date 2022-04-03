@@ -138,6 +138,7 @@ class SaleOrder(models.Model):
                     line_product.product_id.update({
                         'state': 'booked',
                         'partner_id': line.partner_id.id,
+                        'booking_id': self.id,
                         'commission_amount': commission_amount,
                         'discount_amount':  (line_product.price_subtotal/100)* line_product.discount,
                     })
@@ -154,6 +155,7 @@ class SaleOrder(models.Model):
                         commission_amount = (line_product.price_unit/100) * line_product.comission_amount
                     line_product.product_id.update({
                         'state': 'un_posted_sold',
+                        'booking_id': self.id,
                         'commission_amount': commission_amount,
                         'partner_id': line.partner_id.id,
                         'discount_amount': (line_product.price_subtotal/100)* line_product.discount,
