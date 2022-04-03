@@ -41,7 +41,7 @@ class SaleOrder(models.Model):
     installment_created=fields.Boolean(string='Installment Generated')
 
     
-    @api.depends('amount_paid','amount_residual','amount_total','installment_amount_residual','booking_amount_residual','allotment_amount_residual','received_percent')
+    @api.depends('amount_paid','amount_residual','installment_amount_residual','booking_amount_residual','allotment_amount_residual','received_percent')
     def _compute_property_amount(self):
         for line in self:
             total_paid_amount=0
@@ -69,11 +69,24 @@ class SaleOrder(models.Model):
                     total_paid_amount += pay.amount  
             residual_amount = line.amount_total - total_paid_amount
             booking_amount = (((line.amount_total)/100) * 10) - total_paid_amount
-            allotment_amount = (((line.amount_total)/100) * 25) - total_paid_amount
+            allotment_amount = (((line.amount_total)/100) * 15)
+            if booking_amount <=0:
+                allotment_amount = (((line.amount_total)/100) * 15) - total_paid_amount
             advance_amount = (((line.amount_total)/100) * 25)
-            installment_amount = (((line.amount_total)/100) * 75) - total_paid_amount
+            installment_amount = (((line.amount_total)/100) * 75)
+            if booking_amount <=0 and allotment_amount<=0: 
+                installment_amount = (((line.amount_total)/100) * 75) - total_paid_amount
+            if booking_amount > 0:
+               line.update({
+                   'state': 'draft',
+               })
+               for line_prod in line.order_line:
+                    line_prod.product_id.update({
+                        'state': 'available',
+                        'partner_id': False,
+                    })                    
             if line.amount_paid > advance_amount:
-                diff_advance_amt = - total_paid_amount - advance_amount
+                diff_advance_amt = total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - diff_advance_amt
             line.update({
                 'amount_paid':  total_paid_amount,
@@ -88,7 +101,7 @@ class SaleOrder(models.Model):
             if line.amount_paid >= ((line.amount_total)/100) * 25:
                 line.received_percent = 25
                 line.action_register_allottment()
-                
+
             
     def action_register_payment(self):
         amount_calc=0
