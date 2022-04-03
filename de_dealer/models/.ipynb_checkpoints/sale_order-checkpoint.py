@@ -31,17 +31,5 @@ class SaleOrder(models.Model):
         return rec
     
     
-    @api.model
-    def create(self, vals):
-        if vals['partner_id']:
-            partner_id = self.env['res.partner'].browse(vals['partner_id'])
-            
-            if not partner_id.vat:
-                raise UserError(('Please fill CNIC number for selected partner!'))
-            else:
-                pass
-
-        rec = super(SaleOrder, self).create(vals)
-        return rec
     
     
