@@ -64,6 +64,7 @@ class ProductTemplate(models.Model):
     list_price = fields.Float(compute='_compute_sum')
     booking_amount = fields.Float(string='Booking Amount')
     allottment_amount = fields.Float(string='Allottment Amount')
+    installment_amount = fields.Float(string='Installment Amount')
     partner_id = fields.Many2one('res.partner', string='Dealer/Customer')
     partner_role = fields.Char( string='Role')
     state = fields.Selection(selection=[
@@ -119,7 +120,8 @@ class ProductTemplate(models.Model):
             else:
                 line.list_price=0
             line.booking_amount= ((line.list_price)/100)*10   
-            line.allottment_amount= ((line.list_price)/100)*15   
+            line.allottment_amount= ((line.list_price)/100)*15
+            line.installment_amount=((line.list_price)/100)*75
             
     can_be_property = fields.Boolean(string="Can be Property", compute='_compute_can_be_property',
         store=True, readonly=False, help="Specify whether the product can be selected in a property.")
