@@ -379,7 +379,7 @@
         <menuitem id="menu_sale_quotations_property"
                 name='Booking'  
                 action="action_quotations_with_property"
-                parent="menu_property_type"                 
+                parent="de_property.menu_property_property"                 
                 sequence="1" />
         
     </data>
