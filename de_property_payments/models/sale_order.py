@@ -36,7 +36,9 @@ class SaleOrder(models.Model):
         ('sale', 'Allotted'),
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
-        ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')    
+        ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
+    processing_fee_submit = fields.Boolean(string='Processing Fee Submitted')
+    membership_fee_submit = fields.Boolean(string='Membership Fee Submitted')
     installment_line_ids = fields.One2many('order.installment.line', 'order_id' , string='Installment')
     installment_created=fields.Boolean(string='Installment Generated')
 
@@ -78,15 +80,15 @@ class SaleOrder(models.Model):
             if booking_amount <=0 and allotment_amount<=0: 
                 remaining_amount=total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - (total_paid_amount - advance_amount)
-            if booking_amount > 0:
-               line.update({
-                   'state': 'draft',
-               })
-               for line_prod in line.order_line:
-                    line_prod.product_id.update({
-                        'state': 'available',
-                        'partner_id': False,
-                    })                    
+#             if booking_amount > 0:
+#                line.update({
+#                    'state': 'draft',
+#                })
+#                for line_prod in line.order_line:
+#                     line_prod.product_id.update({
+#                         'state': 'available',
+#                         'partner_id': False,
+#                     })                    
             if line.amount_paid > advance_amount:
                 diff_advance_amt = total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - diff_advance_amt
@@ -124,6 +126,12 @@ class SaleOrder(models.Model):
                     allow_amount=installment_line.amount_residual
                     installment_line=installment_line.id
                     break
+        process_fee_submit=False   
+        member_fee_submit=False
+        if self.processing_fee_submit==True:
+            process_fee_submit=True
+        if self.membership_fee_submit==True:
+            member_fee_submit=True    
         return {
             'name': ('Register Payment'),
             'view_type': 'form',
@@ -136,6 +144,8 @@ class SaleOrder(models.Model):
                         'default_partner_id': self.partner_id.id, 
                         'default_token_amount':  amount_calc,
                         'default_type': type,
+                        'default_processing_fee_submit': process_fee_submit,
+                        'default_membership_fee_submit': member_fee_submit,
                         'default_installment_id': installment_line,
                        },
         }

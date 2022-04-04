@@ -13,6 +13,8 @@ class RegisterPayWizard(models.TransientModel):
     token_amount = fields.Float(string='Amount', required=True)
     partner_id = fields.Many2one('res.partner', string='Customer', required=True)
     processing_fee = fields.Boolean(string='Processing Fee Include') 
+    processing_fee_submit = fields.Boolean(string='Processing Fee Submitted')
+    membership_fee_submit = fields.Boolean(string='Membership Fee Submitted')
     membership_fee = fields.Boolean(string='Membership Fee Include')
     date = fields.Date(string='Date', required=True, default=fields.date.today())
     allow_amount = fields.Float(string='Allow Amount')
@@ -49,6 +51,10 @@ class RegisterPayWizard(models.TransientModel):
         total_advance_remaining_amt=self.sale_id.booking_amount_residual + self.sale_id.allotment_amount_residual
         if self.processing_fee==True:
             processing_fee_amount=0
+            self.sale_id.update({
+               'processing_fee_submit': True 
+            })
+            
             for o_line in self.sale_id.order_line:
                 processing_fee_amount=o_line.product_id.categ_id.process_fee 
             if  processing_fee_amount > 0:
@@ -66,6 +72,9 @@ class RegisterPayWizard(models.TransientModel):
                 record = self.env['account.payment'].sudo().create(vals)
         if self.membership_fee==True:
             membership_fee_amount=0
+            self.sale_id.update({
+               'membership_fee_submit': True 
+            })
             for o_line in self.sale_id.order_line:
                 membership_fee_amount=o_line.product_id.categ_id.allottment_fee
             if  membership_fee_amount > 0: 

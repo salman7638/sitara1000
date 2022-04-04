@@ -10,8 +10,10 @@
                       <group>
                           <field name="token_amount" />
                            <field name="date" />
-                           <field name="processing_fee" />
-                           <field name="membership_fee" />
+                           <field name="processing_fee" attrs="{'invisible': [('processing_fee_submit', '=', False)]}" />
+                           <field name="membership_fee" attrs="{'invisible': [('membership_fee_submit', '=', False)]}"/>
+                           <field name="processing_fee_submit"  invisible='1' />
+                           <field name="membership_fee_submit"  invisible='1'  />
                            <field name="allow_amount" invisible='1' />
                            <field name="partner_id" readonly='1'/>
                            <field name="installment_id" readonly='1'/>
