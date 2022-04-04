@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "de_property_report",
+    'name': "Property Report",
 
     'summary': """
-            de_property_report
+            Property Report
              1) booking_report
              2) allotment_report
        """,
 
     'description': """
-       de_property_report
+            Property Report
              1) booking_report
              2) allotment_report
     """,
@@ -24,14 +24,14 @@
     'version': '15.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','sale','de_sale_booking','de_property_payments','de_property'],
+    'depends': ['base','sale','de_sale_booking','de_property_payments','de_property','report_xlsx'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'views/menu_views.xml', 
 #         'wizard/advance_receivable_wizard.xml',
         'wizard/plot_status_wizard.xml',
+        'report/plot_status_report.xml',
         'report/booking_report.xml',
         'report/booking_template.xml',
         'report/allotment_report.xml',

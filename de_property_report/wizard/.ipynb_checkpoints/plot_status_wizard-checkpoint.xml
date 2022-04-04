@@ -34,8 +34,10 @@
             <field name="view_id" ref="view_plot_status_report_wizard_form"/>
         </record>
       
-     
-       <menuitem id="menu_property_plot_status" name="Plot Status Report" parent="de_property.menu_property_reporting"
+       <menuitem id="menu_property_reporting" name="Reporting" parent="de_property.property_menu_root"
+             sequence="59"/>
+      
+       <menuitem id="menu_property_plot_status" name="Plot Status Report" parent="menu_property_reporting"  action='open_plot_status_wizard_action'
              sequence="10"/>
       
   </data>
