@@ -28,9 +28,10 @@
 
     # always loaded
     'data': [
-#         'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'views/menu_views.xml', 
 #         'wizard/advance_receivable_wizard.xml',
-#         'wizard/plot_status_report.xml',
+        'wizard/plot_status_wizard.xml',
         'report/booking_report.xml',
         'report/booking_template.xml',
         'report/allotment_report.xml',
@@ -39,6 +40,7 @@
         'report/payment_schedule_template.xml',
         'report/payment_report.xml',
         'report/payment_template.xml',
+        
     ],
     # only loaded in demonstration mode
     'demo': [

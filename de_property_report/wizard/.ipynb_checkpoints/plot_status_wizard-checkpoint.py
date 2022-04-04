@@ -15,8 +15,9 @@ class PlotStatusWizard(models.Model):
         data['form'] = self.read(['date'])[0]
         return self._print_report(data)
 
+    
     def _print_report(self, data):
         data['form'].update(self.read(['date'])[0])
-        return self.env.ref('de_hr_attendance_report.open_hr_report_wizard_action').report_action(self, data=data, config=False)
+        return self.env.ref('de_property_report.open_plot_status_wizard_action').report_action(self, data=data, config=False)
     
     
