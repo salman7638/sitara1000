@@ -23,6 +23,20 @@ class ProductTemplate(models.Model):
                 raise UserError('You are not Allow to Unreserve This Product!')
     
 
+    def action_generate_booking(self):
+        for rec in self:
+            selected_ids = rec.env.context.get('active_ids', [])
+            selected_records = rec.env['product.product'].browse(selected_ids)
+        return {
+            'name': ('Generate Booking'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'generate.booking.wizard',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_product_ids': selected_records.ids,'default_partner_id': self.partner_id.id},
+        }
     
     def action_assign_token(self):
         for rec in self:

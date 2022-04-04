@@ -16,18 +16,20 @@ class AssignTokenWizard(models.TransientModel):
     product_ids = fields.Many2many('product.product', string='Plot')
     
     def action_assign_token(self):
-        vals = {
-            'partner_id': self.partner_id.id,
-            'date': self.date,
-            'journal_id': self.journal_id.id,
-            'amount': self.token_amount,
-            'ref': self.check_number,
-            'type':  'token',
-            'payment_type': 'inbound',
-            }
-        record = self.env['account.payment'].sudo().create(vals)
-        
+        total_plot = 0
+        for order_count in self.product_ids:
+            total_plot += total_plot + 1            
         for line in self.product_ids:
+            vals = {
+                'partner_id': self.partner_id.id,
+                'date': self.date,
+                'journal_id': self.journal_id.id,
+                'amount': (self.token_amount/total_plot) ,
+                'ref': self.check_number ,
+                'type':  'token' ,
+                'payment_type': 'inbound' ,
+                }
+            record = self.env['account.payment'].sudo().create(vals)       
             line.update({
                 'payment_ids':  record.ids,
                 'state': 'reserved',
