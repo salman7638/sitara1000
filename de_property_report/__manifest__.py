@@ -24,7 +24,7 @@
     'version': '15.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','sale','de_sale_booking'],
+    'depends': ['base','sale','de_sale_booking','de_property_payments','de_property'],
 
     # always loaded
     'data': [
@@ -35,6 +35,10 @@
         'report/booking_template.xml',
         'report/allotment_report.xml',
         'report/allotment_template.xml',
+        'report/payment_schedule_report.xml',
+        'report/payment_schedule_template.xml',
+        'report/payment_report.xml',
+        'report/payment_template.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
