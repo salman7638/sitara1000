@@ -68,14 +68,16 @@ class SaleOrder(models.Model):
                 if pay.type!='fee':
                     total_paid_amount += pay.amount  
             residual_amount = line.amount_total - total_paid_amount
+            tot_booking_amount = (((line.amount_total)/100) * 10) 
             booking_amount = (((line.amount_total)/100) * 10) - total_paid_amount
             allotment_amount = (((line.amount_total)/100) * 15)
             if booking_amount <=0:
-                allotment_amount = (((line.amount_total)/100) * 15) - total_paid_amount
+                allotment_amount = (((line.amount_total)/100) * 15) - (total_paid_amount - tot_booking_amount)
             advance_amount = (((line.amount_total)/100) * 25)
             installment_amount = (((line.amount_total)/100) * 75)
             if booking_amount <=0 and allotment_amount<=0: 
-                installment_amount = (((line.amount_total)/100) * 75) - total_paid_amount
+                remaining_amount=total_paid_amount - advance_amount
+                installment_amount = (((line.amount_total)/100) * 75) - (total_paid_amount - advance_amount)
             if booking_amount > 0:
                line.update({
                    'state': 'draft',
@@ -207,7 +209,7 @@ class SaleOrderLine(models.Model):
             commission_amount = line.comission_amount
             if line.commission_type=='percent':
                 commission_amount = (line.price_unit/100) * line.comission_amount    
-            price = price - commission_amount
+#             price = price - commission_amount
             taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
