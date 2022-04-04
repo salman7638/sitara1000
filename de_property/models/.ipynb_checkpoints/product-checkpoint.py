@@ -76,12 +76,21 @@ class ProductTemplate(models.Model):
             ('un_posted_sold', 'Un-Posted Sold'),
             ('posted_sold', 'Posted Sold'),
         ], string='Status', required=True, readonly=True, copy=False, tracking=True,
-        default='available')
-    
+        default='available')    
     amount_paid = fields.Float(string='Amount Paid', compute='compute_amount_total')
     amount_residual = fields.Float(string='Amount Due')
     commission_amount = fields.Float(string='Commission Amount')
     discount_amount = fields.Float(string='Discount Amount')
+    date_reservation = fields.Date(string='Date of Reservation')
+    date_validity = fields.Date(string='Date Validity')
+    
+#     def action_sale_quotations_new(self):
+#         for property in self:
+#             vals={
+#                 'partner_id': self.partner_id.id,                
+#             }
+#             order=self.env['sale.order'].create(vals)
+    
     
     @api.depends('amount_paid', 'amount_residual', 'list_price','commission_amount','discount_amount')
     def compute_amount_total(self):
@@ -91,7 +100,7 @@ class ProductTemplate(models.Model):
             for  pay in line.payment_ids:
                 if pay.state in ('draft','posted'):
                     amount_paid += pay.amount 
-            amount_residual =   line.list_price - amount_paid  - line.commission_amount - line.discount_amount 
+            amount_residual =   line.list_price - amount_paid - line.discount_amount 
             if amount_residual < 0:
                 amount_residual=0
             line.amount_paid = amount_paid
