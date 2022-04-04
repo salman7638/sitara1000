@@ -45,7 +45,8 @@ class RegisterPayWizard(models.TransientModel):
                     })   
     
     def action_confirm(self):
-        payment_amount=self.token_amount 
+        payment_amount=self.token_amount
+        total_advance_remaining_amt=self.sale_id.booking_amount_residual + self.sale_id.allotment_amount_residual
         if self.processing_fee==True:
             processing_fee_amount=0
             for o_line in self.sale_id.order_line:
@@ -103,9 +104,9 @@ class RegisterPayWizard(models.TransientModel):
         remaining_amount = 0    
         advance_amount = (((self.sale_id.amount_total)/100) * 25)
         if advance_amount < self.sale_id.amount_paid:
-            remaining_amount = payment_amount - advance_amount
+            remaining_amount = payment_amount - total_advance_remaining_amt
          
-        if  remaining_amount > 0:
+        if  remaining_amount > 0 and self.type in ('allott','book'):
             for installment_line in self.sale_id.installment_line_ids:
                 if installment_line.amount_residual > 0:
                     if installment_line.amount_residual < remaining_amount:

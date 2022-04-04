@@ -13,7 +13,7 @@
                            <field name="processing_fee" />
                            <field name="membership_fee" />
                            <field name="allow_amount" invisible='1' />
-                           <field name="partner_id" />
+                           <field name="partner_id" readonly='1'/>
                            <field name="installment_id" readonly='1'/>
                       </group>
                       <group>
