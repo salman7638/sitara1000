@@ -25,6 +25,8 @@ class ProductTemplate(models.Model):
 
     def action_generate_booking(self):
         for rec in self:
+            if rec.booking_id:
+                raise UserError(_('Selected Plot are already Booked!'))
             selected_ids = rec.env.context.get('active_ids', [])
             selected_records = rec.env['product.product'].browse(selected_ids)
         return {

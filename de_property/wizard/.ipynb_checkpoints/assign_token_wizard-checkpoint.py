@@ -18,7 +18,7 @@ class AssignTokenWizard(models.TransientModel):
     def action_assign_token(self):
         total_plot = 0
         for order_count in self.product_ids:
-            total_plot += total_plot + 1            
+            total_plot += 1 
         for line in self.product_ids:
             vals = {
                 'partner_id': self.partner_id.id,
