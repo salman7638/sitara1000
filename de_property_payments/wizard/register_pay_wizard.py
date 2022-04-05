@@ -95,9 +95,6 @@ class RegisterPayWizard(models.TransientModel):
           
         for rorder in self.sale_id.order_line:
             devision_prct = (payment_amount/self.sale_id.amount_total) * rorder.price_subtotal
-            
-            
-#             raise UserError(str(payment_amount)) 
             vals = {
                 'partner_id': self.partner_id.id,
                 'date': self.date,
@@ -118,113 +115,114 @@ class RegisterPayWizard(models.TransientModel):
                     if record_pay:
                         payment_list.append(record_pay.id)
                     order_line.product_id.payment_ids=payment_list
-            remaining_amount = 0    
-            advance_amount = (((self.sale_id.amount_total)/100) * 25)
-            if advance_amount < self.sale_id.amount_paid:
-                remaining_amount = payment_amount - total_advance_remaining_amt
-            if not  self.installment_id:            
-                if  remaining_amount > 0 and self.type in ('allott','book'):
-                    for installment_line in self.sale_id.installment_line_ids:
-                        if installment_line.amount_residual > 0:
-                            if installment_line.amount_residual < remaining_amount:
-                                installment_line.update({
-                                'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
-                                'payment_date':self.date,
-                                'remarks': 'Paid' ,
-                                })    
-                                installment_line.update({
-                                'amount_residual': 0
-                                })    
-                            elif installment_line.amount_residual == remaining_amount:    
-                                installment_line.update({
-                                'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
-                                'payment_date':self.date,
-                                'remarks': 'Paid' ,
-                                })    
-                                installment_line.update({
-                                'amount_residual': 0
-                                })
-                                break
-                            elif installment_line.amount_residual > remaining_amount:   
-                                installment_line.update({
-                                'amount_paid': installment_line.amount_paid + remaining_amount,
-                                'payment_date':self.date,
-                                'remarks': 'Partial Payment' ,
-                                })    
-                                installment_line.update({
-                                'amount_residual': installment_line.amount_residual - remaining_amount
-                                })
-                                break
+        remaining_amount = 0    
+        advance_amount = (((self.sale_id.amount_total)/100) * 25)
+        if advance_amount < self.sale_id.amount_paid:
+            remaining_amount = payment_amount - total_advance_remaining_amt
+        if  remaining_amount > 0 and self.type in ('allott','book'):
+            for installment_line in self.sale_id.installment_line_ids:
+                if installment_line.amount_residual > 0:
+                    if installment_line.amount_residual < remaining_amount:
+                        installment_line.update({
+                        'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
+                        'payment_date':self.date,
+                        'remarks': 'Paid' ,
+                        })    
+                        installment_line.update({
+                        'amount_residual': 0
+                        })    
+                    elif installment_line.amount_residual == remaining_amount:    
+                        installment_line.update({
+                        'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
+                        'payment_date':self.date,
+                        'remarks': 'Paid' ,
+                        })    
+                        installment_line.update({
+                        'amount_residual': 0
+                        })
+                        break
+                    elif installment_line.amount_residual > remaining_amount:   
+                        installment_line.update({
+                        'amount_paid': installment_line.amount_paid + remaining_amount,
+                        'payment_date':self.date,
+                        'remarks': 'Partial Payment' ,
+                        })    
+                        installment_line.update({
+                        'amount_residual': installment_line.amount_residual - remaining_amount
+                        })
+                        break
 
-            if self.installment_id:            
-                status= 'Partial Payment'
-                installment_amount = self.installment_id.amount_residual - self.token_amount 
-                if installment_amount > 0:
-                    self.installment_id.update({
-                    'amount_paid': self.installment_id.amount_paid + self.token_amount,
-                    'payment_date':self.date,
-                    'remarks': status ,
-                    })    
-                    self.installment_id.update({
-                    'amount_residual': self.installment_id.amount_residual - self.token_amount
-                    })
-                elif installment_amount==0:
-                    self.installment_id.update({
-                    'amount_paid': self.installment_id.amount_paid + self.token_amount,
-                    'payment_date':self.date,
-                    'remarks': status ,
-                    })    
-                    self.installment_id.update({
-                    'amount_residual': self.installment_id.amount_residual - self.token_amount
-                    })
-                    self.installment_id.update({
-                    'remarks': 'Paid' ,
-                    }) 
-                # group payment    
-                elif installment_amount < 0:
-                    remaining_amount = self.token_amount - self.installment_id.amount_residual
-                    self.installment_id.update({
-                    'amount_paid': self.installment_id.amount_paid + self.installment_id.amount_residual,
-                    'payment_date':self.date,
-                    'remarks': 'Paid' ,
-                    })    
-                    self.installment_id.update({
-                    'amount_residual': 0
-                    })
+        if self.installment_id:            
+            status= 'Partial Payment'
+            installment_amount = self.installment_id.amount_residual - self.token_amount 
+            if installment_amount > 0:
+                self.installment_id.update({
+                'amount_paid': self.installment_id.amount_paid + self.token_amount,
+                'payment_date':self.date,
+                'remarks': status ,
+                })    
+                self.installment_id.update({
+                'amount_residual': self.installment_id.amount_residual - self.token_amount
+                })
+            elif installment_amount==0:
+                self.installment_id.update({
+                'amount_paid': self.installment_id.amount_paid + self.token_amount,
+                'payment_date':self.date,
+                'remarks': status ,
+                })    
+                self.installment_id.update({
+                'amount_residual': self.installment_id.amount_residual - self.token_amount
+                })
+                self.installment_id.update({
+                'remarks': 'Paid' ,
+                }) 
+            # group payment    
+            elif installment_amount < 0:
+                remaining_amount = self.token_amount - self.installment_id.amount_residual
+                
+                self.installment_id.update({
+                'amount_paid': self.installment_id.amount_paid + self.installment_id.amount_residual,
+                'payment_date':self.date,
+                'remarks': 'Paid' ,
+                })    
+                self.installment_id.update({
+                'amount_residual': 0
+                })
 
-    #                 raise UserError(str(remaining_amount))
-                    for installment_line in self.sale_id.installment_line_ids:
-                        if installment_line.amount_residual > 0:
-                            if installment_line.amount_residual < remaining_amount:
-                                installment_line.update({
-                                'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
-                                'payment_date':self.date,
-                                'remarks': 'Paid' ,
-                                })    
-                                installment_line.update({
-                                'amount_residual': 0
-                                })    
-                            elif installment_line.amount_residual == remaining_amount:    
-                                installment_line.update({
-                                'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
-                                'payment_date':self.date,
-                                'remarks': 'Paid' ,
-                                })    
-                                installment_line.update({
-                                'amount_residual': 0
-                                })
-                                break
-                            elif installment_line.amount_residual > remaining_amount:   
-                                installment_line.update({
-                                'amount_paid': installment_line.amount_paid + remaining_amount,
-                                'payment_date':self.date,
-                                'remarks': 'Partial Payment' ,
-                                })    
-                                installment_line.update({
-                                'amount_residual': installment_line.amount_residual - remaining_amount
-                                })
-                                break
-                            
+                for installment_line in self.sale_id.installment_line_ids:
+                    if installment_line.amount_residual > 0 and remaining_amount > 0:
+                        if installment_line.amount_residual < remaining_amount:
+                            installment_line.update({
+                            'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
+                            'payment_date':self.date,
+                            'remarks': 'Paid' ,
+                            })    
+                            installment_line.update({
+                            'amount_residual': 0
+                            })    
+                        elif installment_line.amount_residual == remaining_amount: 
+                            installment_line.update({
+                             'amount_paid': installment_line.amount_paid + installment_line.amount_residual,
+                             'payment_date':self.date,
+                             'remarks': 'Paid' ,
+                            })    
+                            installment_line.update({
+                            'amount_residual': 0
+                            })
+                            break
+                        elif installment_line.amount_residual > remaining_amount: 
+
+                            installment_line.update({
+                            'amount_paid': installment_line.amount_paid + remaining_amount,
+                            'payment_date':self.date,
+                            'remarks': 'Partial Payment' ,
+                            })    
+                            installment_line.update({
+                            'amount_residual': installment_line.amount_residual - remaining_amount
+                            })
+                            remaining_amount = 0
+                            break
+
         self.sale_id.action_confirm_booking()
         self.sale_id.action_register_allottment()                    
         self.sale_id._compute_property_amount()                    
