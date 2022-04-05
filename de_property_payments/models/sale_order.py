@@ -80,15 +80,14 @@ class SaleOrder(models.Model):
             if booking_amount <=0 and allotment_amount<=0: 
                 remaining_amount=total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - (total_paid_amount - advance_amount)
-#             if booking_amount > 0:
-#                line.update({
-#                    'state': 'draft',
-#                })
-#                for line_prod in line.order_line:
-#                     line_prod.product_id.update({
-#                         'state': 'available',
-#                         'partner_id': False,
-#                     })                    
+            if booking_amount > 0:
+               line.update({
+                   'state': 'draft',
+               })
+               for line_prod in line.order_line:
+                    line_prod.product_id.update({
+                        'state': 'reserved',
+                    })                    
             if line.amount_paid > advance_amount:
                 diff_advance_amt = total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - diff_advance_amt
