@@ -25,7 +25,7 @@ class generate_booking_wizard(models.TransientModel):
         for line in self.product_ids:
             line.update({
                 'partner_id': self.partner_id.id,
-                'state': 'unconfirm',
+                'state': 'reserved',
                 'date_reservation': self.date_reservation,
                 'date_validity': self.date_validity,
             })
