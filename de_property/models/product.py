@@ -98,6 +98,7 @@ class ProductTemplate(models.Model):
     commission_amount = fields.Float(string='Commission Amount')
     discount_amount = fields.Float(string='Discount Amount')
     date_reservation = fields.Date(string='Date of Reservation')
+    booking_validity = fields.Date(string='Booking Validity')
     date_validity = fields.Date(string='Date Validity')
     
 #     def action_sale_quotations_new(self):

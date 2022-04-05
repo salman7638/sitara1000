@@ -18,7 +18,7 @@ class generate_booking_wizard(models.TransientModel):
     commision_amount = fields.Float(string='Commission')
     discount = fields.Float(string='Disc%')
     product_ids = fields.Many2many('product.product', string='Plot')
-    date_reservation = fields.Date(string='Date of Reservation', required=True, default=fields.date.today() )
+    date_reservation = fields.Date(string='Booking Date', required=True, default=fields.date.today() )
     date_validity = fields.Date(string='Date Validity', required=True, default=fields.date.today()+timedelta(30))
     
     
@@ -26,10 +26,14 @@ class generate_booking_wizard(models.TransientModel):
     
     def action_assign_partner(self):
         for line in self.product_ids:
+            if line.state=='available':
+                line.update({
+                   'date_reservation': self.date_reservation,
+                })
             line.update({
                 'partner_id': self.partner_id.id,
                 'state': 'reserved',
-                'date_reservation': self.date_reservation,
+                'booking_validity': self.date_reservation,
                 'date_validity': self.date_validity,
             })
         booking_vals = {

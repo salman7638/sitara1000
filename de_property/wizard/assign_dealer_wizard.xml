@@ -10,9 +10,11 @@
                       <group>
                           <field name="partner_id" />
                           <field name="date_reservation" />
+                          
                       </group>
                       <group>
                           <field name="date_validity" />
+                          <field name="booking_validity" />
                           <field name="product_ids" widget="many2many_tags" invisible="1"/>
                           
                       </group>
