@@ -30,3 +30,4 @@ access_product_template_feature_line_user,access.product.template.feature.line.u
 access_op_premium_factor,access.op.premium.factor,model_op_premium_factor,,1,1,1,1
 access_assign_dealer_wizard,access.assign.dealer.wizard,model_assign_dealer_wizard,,1,1,1,1
 access_assign_token_wizard,access.assign.token.wizard,model_assign_token_wizard,,1,1,1,1
+access_generate_booking_wizard,access.generate.booking.wizard,model_generate_booking_wizard,,1,1,1,1

@@ -11,7 +11,7 @@
                <strong>Office Copy</strong>
             </div>
             
-                <h5 style='text-align:center;'>Booking Form</h5>
+<!--                 <h5 style='text-align:center;'>Booking Form</h5> -->
                 <h5 style='text-align:left;'>      M/s Sitara Developers(Pvt)Ltd </h5>
             <br/>
                 <table class='table table-sm'>
@@ -42,10 +42,6 @@
                         <td style='border-bottom:1px solid black;text-align:left;'><span t-esc='docs.partner_id.name'/></td>
                         <td>Father/Husband Name:</td>
                         <td style='border-bottom:1px solid black;text-align:left;'><span t-esc='docs.father_husband_name'/></td>
-                        
-                        <td width='200px;'>                          
-                            <img t-if="docs.image_1920" t-att-src="image_data_uri(docs.image_1920)" style="max-height:85pt;max-width:90%" alt="Allotee Image"/>
-                        </td>
                        
                          </tr>
                   <tr>
@@ -143,7 +139,7 @@
                <strong>Customer Copy</strong>
             </div>
             
-                <h5 style='text-align:center;'>Booking Form</h5>
+<!--                 <h5 style='text-align:center;'>Booking Form</h5> -->
                 <h5 style='text-align:left;'>M/s Sitara Developers(Pvt)Ltd </h5>
             <br/>
                 <table class='table table-sm'>

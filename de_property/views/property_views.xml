@@ -357,7 +357,30 @@
         </record>
         
         <menuitem id="menu_property_type_property_unit_type" name="Type" parent="menu_property_config_units"
-            action="action_property_type_unit_type" groups="de_property.group_property_manager" sequence="20"/>        
+            action="action_property_type_unit_type" groups="de_property.group_property_manager" sequence="20"/>
+        
+         <record id="action_quotations_with_property" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="context">{'search_default_my_quotation': 1}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
+              </p><p>
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem id="menu_sale_quotations_property"
+                name='Booking'  
+                action="action_quotations_with_property"
+                parent="de_property.menu_property_property"                 
+                sequence="1" />
         
     </data>
 </odoo>
