@@ -89,15 +89,15 @@ class RegisterPayWizard(models.TransientModel):
                      'type': 'fee',
                      }
                     record = self.env['account.payment'].sudo().create(vals)
-        total_plot_count = 0
-        for order_line in self.sale_id.order_line:
-            total_plot_count +=1 
-        difference_amount = 0    
+
+        difference_amount = 0 
+        reconcile_list = []
         for rorder in self.sale_id.order_line:
             devision_prct = (payment_amount/self.sale_id.amount_total) * rorder.price_subtotal
             if devision_prct > rorder.product_id.amount_residual:
                 difference_amount +=  devision_prct - rorder.product_id.amount_residual 
-                devision_prct = rorder.product_id.amount_residual 
+                devision_prct = rorder.product_id.amount_residual
+                reconcile_list.append(rorder.id)
             vals = {
                 'partner_id': self.partner_id.id,
                 'date': self.date,
@@ -110,19 +110,19 @@ class RegisterPayWizard(models.TransientModel):
                 'installment_id': self.installment_id.id,
                 }
             record_pay = self.env['account.payment'].sudo().create(vals)
-            for order_line in self.sale_id.order_line:
-                if rorder.id==order_line.id :
+            for intial_line in self.sale_id.order_line:
+                if rorder.id==intial_line.id :                     
                     payment_list = []
-                    for pay_line in order_line.product_id.payment_ids:
+                    for pay_line in intial_line.product_id.payment_ids:
                         payment_list.append(pay_line.id)
                     if record_pay:
                         payment_list.append(record_pay.id)
-                    order_line.product_id.payment_ids=payment_list
-        
+                    intial_line.product_id.payment_ids=payment_list
         if difference_amount > 0:
             for diff_order in self.sale_id.order_line:
-                if difference_amount > diff_order.product_id.amount_residual and diff_order.product_id.amount_residual > 0:
+                if difference_amount > diff_order.product_id.amount_residual and diff_order.product_id.amount_residual > 0 and diff_order.id not in reconcile_list:
                     difference_amount =  difference_amount - diff_order.product_id.amount_residual 
+                    
                     vals = {
                         'partner_id': self.partner_id.id,
                         'date': self.date,
@@ -144,7 +144,7 @@ class RegisterPayWizard(models.TransientModel):
                                 payment_list.append(record_pay.id)
                             df_line.product_id.payment_ids=payment_list
 
-                elif difference_amount <= diff_order.product_id.amount_residual and diff_order.product_id.amount_residual > 0:
+                elif difference_amount <= diff_order.product_id.amount_residual and diff_order.product_id.amount_residual > 0 and diff_order.id not in reconcile_list:
                     vals = {
                         'partner_id': self.partner_id.id,
                         'date': self.date,
