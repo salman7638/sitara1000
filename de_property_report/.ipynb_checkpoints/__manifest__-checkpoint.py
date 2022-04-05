@@ -30,8 +30,8 @@
     'data': [
         'security/ir.model.access.csv',
 #         'wizard/advance_receivable_wizard.xml',
-        'wizard/plot_status_wizard.xml',
-        'report/plot_status_report.xml',
+#         'wizard/plot_status_wizard.xml',
+#         'report/plot_status_report.xml',
         'report/booking_report.xml',
         'report/booking_template.xml',
         'report/allotment_report.xml',
