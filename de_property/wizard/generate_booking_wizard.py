@@ -21,6 +21,9 @@ class generate_booking_wizard(models.TransientModel):
     date_reservation = fields.Date(string='Date of Reservation', required=True, default=fields.date.today() )
     date_validity = fields.Date(string='Date Validity', required=True, default=fields.date.today()+timedelta(30))
     
+    
+    
+    
     def action_assign_partner(self):
         for line in self.product_ids:
             line.update({
