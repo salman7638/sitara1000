@@ -18,6 +18,6 @@ class PlotStatusWizard(models.Model):
     
     def _print_report(self, data):
         data['form'].update(self.read(['date'])[0])
-        return self.env.ref('de_property_report.open_plot_status_wizard_action').report_action(self, data=data, config=False)
+        return self.env.ref('de_property_report.open_plot_status_report').report_action(self, data=data, config=False)
     
     

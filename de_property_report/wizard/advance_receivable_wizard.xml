@@ -1,19 +1,20 @@
 <odoo>
   <data>
            <!--Display form view of wizard-->    
-        <record id="view_plot_status_report_wizard_form" model="ir.ui.view">
-            <field name="name">plot.status.wizard.form</field>
-            <field name="model">plot.status.wizard</field>
+        <record id="view_advance_receivable_wizard_form" model="ir.ui.view">
+            <field name="name">advance.receivable.wizard.form</field>
+            <field name="model">advance.receivable.wizard</field>
             <field name="arch" type="xml">
-                <form string="Plot Status Report">
+                <form string="Advance Receivable Report">
                     <group>
                         
                        <group>
-                              <field name="start_date" />
+                              <field name="date_from" />
                       </group>
                         
                       <group>
-                        <field name="end_date" />
+                        <field name="date_to" />
+                        <field name="type" />  
                       </group>                        
                         
                     </group>
@@ -27,16 +28,16 @@
         </record>
 
         <!--Open the wizard on click of menu-->
-        <record id="open_plot_status_wizard_action" model="ir.actions.act_window">
-            <field name="name">Plot Status Report</field>
-            <field name="res_model">plot.status.wizard</field>
+        <record id="open_advance_receivable_wizard_action" model="ir.actions.act_window">
+            <field name="name">Forcast Receivables</field>
+            <field name="res_model">advance.receivable.wizard</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="view_id" ref="view_plot_status_report_wizard_form"/>
+            <field name="view_id" ref="view_advance_receivable_wizard_form"/>
         </record>
       
      
-       <menuitem id="menu_property_forcasted_receivable_report" name="Plot Forcasted Receivable Report" parent="de_property.menu_property_reporting"
+       <menuitem id="menu_property_forcasted_receivable_report" name="Forcast Receivables" parent="de_property.menu_property_reporting"
              sequence="10"/>
       
   </data>

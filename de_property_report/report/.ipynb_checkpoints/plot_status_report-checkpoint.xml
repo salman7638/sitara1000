@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         
     
@@ -12,15 +12,15 @@
             <field name="binding_model_id" ref="de_property.model_plot_status_wizard"/>
             <field name="binding_type">report</field>
         </record>
-</odoo>
-
-
-<!-- <odoo>
-     <report id="absent_report_xlx"
-            model="plot.status.wizard"
-            string="Absent Report"
-            report_type="xlsx"
-            name="de_attendance_absent_days.absent_report_xlx"
-            file="de_attendance_absent_days.absent_report_xlx"
-    />
 </odoo> -->
+
+
+<odoo>
+     <report id="open_plot_status_report"
+            model="plot.status.wizard"
+            string="Plot Status Report"
+            report_type="xlsx"
+            name="de_property_report.status_report_xlx"
+            file="de_property_report.status_report_xlx"
+    />
+</odoo>

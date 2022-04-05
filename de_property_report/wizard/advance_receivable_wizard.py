@@ -16,3 +16,13 @@ class AdvanceReceivableWizard(models.Model):
         ('year', 'Yearly'),
         ], string='Type', required=True, default='date_wise')
     
+   
+    def check_report(self):
+        data = {}
+        data['form'] = self.read(['date_from', 'date_to', 'type'])[0]
+        return self._print_report(data)
+
+    
+    def _print_report(self, data):
+        data['form'].update(self.read(['date_from', 'date_to', 'type'])[0])
+        return self.env.ref('de_property_report.open_adv_receivable_report').report_action(self, data=data, config=False)
