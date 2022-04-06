@@ -146,9 +146,9 @@ class ProductTemplate(models.Model):
                 line.list_price = total_amount + (line.property_amenities_id.percent * (total_amount / 100))   
             else:
                 line.list_price=0
-            line.booking_amount= ((line.list_price-line.commission_amount-line.discount_amount)/100)*10   
-            line.allottment_amount= ((line.list_price-line.commission_amount-line.discount_amount)/100)*15
-            line.installment_amount=((line.list_price-line.commission_amount-line.discount_amount)/100)*75
+            line.booking_amount= ((line.list_price-line.discount_amount)/100)*10   
+            line.allottment_amount= ((line.list_price-line.discount_amount)/100)*15
+            line.installment_amount=((line.list_price-line.discount_amount)/100)*75
             
     can_be_property = fields.Boolean(string="Can be Property", compute='_compute_can_be_property',
         store=True, readonly=False, help="Specify whether the product can be selected in a property.")
