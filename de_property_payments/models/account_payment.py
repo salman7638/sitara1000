@@ -2,6 +2,8 @@
 from odoo import models, fields, api, _
 
 
+
+
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
     
@@ -20,9 +22,11 @@ class AccountPayment(models.Model):
     def action_cancel(self):
         for line in self:
             if line.installment_id:
+                diff=line.installment_id.amount_paid - line.amount
                 line.installment_id.update({
                     'remarks': 'Pending',
                     'amount_paid': line.installment_id.amount_paid - line.amount,
+                    'amount_residual':line.installment_id.amount_residual + line.amount,
                 })
             if line.order_id.amount_paid==0:
                line.order_id.update({

@@ -23,6 +23,22 @@ class ProductTemplate(models.Model):
                 raise UserError('You are not Allow to Unreserve This Product!')
     
 
+    def action_generate_booking(self):
+        for rec in self:
+            if rec.booking_id:
+                raise UserError(_('Selected Plot are already Booked!'))
+            selected_ids = rec.env.context.get('active_ids', [])
+            selected_records = rec.env['product.product'].browse(selected_ids)
+        return {
+            'name': ('Generate Booking'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'generate.booking.wizard',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_product_ids': selected_records.ids,'default_partner_id': self.partner_id.id},
+        }
     
     def action_assign_token(self):
         for rec in self:
@@ -64,7 +80,9 @@ class ProductTemplate(models.Model):
     list_price = fields.Float(compute='_compute_sum')
     booking_amount = fields.Float(string='Booking Amount')
     allottment_amount = fields.Float(string='Allottment Amount')
+    installment_amount = fields.Float(string='Installment Amount')
     partner_id = fields.Many2one('res.partner', string='Dealer/Customer')
+    booking_id = fields.Many2one('sale.order', string='Booking')
     partner_role = fields.Char( string='Role')
     state = fields.Selection(selection=[
             ('available', 'Available'),
@@ -74,12 +92,22 @@ class ProductTemplate(models.Model):
             ('un_posted_sold', 'Un-Posted Sold'),
             ('posted_sold', 'Posted Sold'),
         ], string='Status', required=True, readonly=True, copy=False, tracking=True,
-        default='available')
-    
+        default='available')    
     amount_paid = fields.Float(string='Amount Paid', compute='compute_amount_total')
     amount_residual = fields.Float(string='Amount Due')
     commission_amount = fields.Float(string='Commission Amount')
     discount_amount = fields.Float(string='Discount Amount')
+    date_reservation = fields.Date(string='Date of Reservation')
+    booking_validity = fields.Date(string='Booking Validity')
+    date_validity = fields.Date(string='Date Validity')
+    
+#     def action_sale_quotations_new(self):
+#         for property in self:
+#             vals={
+#                 'partner_id': self.partner_id.id,                
+#             }
+#             order=self.env['sale.order'].create(vals)
+    
     
     @api.depends('amount_paid', 'amount_residual', 'list_price','commission_amount','discount_amount')
     def compute_amount_total(self):
@@ -89,7 +117,7 @@ class ProductTemplate(models.Model):
             for  pay in line.payment_ids:
                 if pay.state in ('draft','posted'):
                     amount_paid += pay.amount 
-            amount_residual =   line.list_price - amount_paid  - line.commission_amount - line.discount_amount 
+            amount_residual =   line.list_price - amount_paid - line.discount_amount 
             if amount_residual < 0:
                 amount_residual=0
             line.amount_paid = amount_paid
@@ -118,8 +146,9 @@ class ProductTemplate(models.Model):
                 line.list_price = total_amount + (line.property_amenities_id.percent * (total_amount / 100))   
             else:
                 line.list_price=0
-            line.booking_amount= ((line.list_price)/100)*10   
-            line.allottment_amount= ((line.list_price)/100)*15   
+            line.booking_amount= ((line.list_price-line.discount_amount)/100)*10   
+            line.allottment_amount= ((line.list_price-line.discount_amount)/100)*15
+            line.installment_amount=((line.list_price-line.discount_amount)/100)*75
             
     can_be_property = fields.Boolean(string="Can be Property", compute='_compute_can_be_property',
         store=True, readonly=False, help="Specify whether the product can be selected in a property.")

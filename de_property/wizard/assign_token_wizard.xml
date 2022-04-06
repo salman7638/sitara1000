@@ -9,12 +9,15 @@
                     <group>
                       <group>
                           <field name="token_amount" />
-                           <field name="date" />
+                          <field name="date" />
                           <field name="partner_id" />
+                          <field name="date_validity" />
+                          <field name="booking_validity" />
                       </group>
                       <group>
                           <field name="journal_id"  string='Bank' />
                            <field name="check_number" />
+                           <field name="date_reservation" />
                           <field name="product_ids" widget="many2many_tags" invisible="1"/>
                           
                       </group>

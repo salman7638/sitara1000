@@ -19,7 +19,7 @@
 			</xpath>
             
 			<xpath expr="//sheet/group/group/field[@name = 'partner_id']" position="after">
-                <field name="dealer_id" wedgit="many2one_tags"/>
+<!--                 <field name="dealer_id" wedgit="many2one_tags"/> -->
 <!--                 <field name="dealers" string="Dealers" invisible="1"/> -->
 <!--                 <field name="dealer_id" string="Dealer" 
                 attrs="{'readonly':[('state','not in',['draft','sent'])]}"
@@ -27,7 +27,7 @@
 			</xpath>
 			
 			<xpath expr="//sheet/group/group/field[@name = 'payment_term_id']" position="after">
-                <field name="amount_received" />
+<!--                 <field name="amount_received" /> -->
 			</xpath>
 			
 			<xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_id']" position="attributes" >

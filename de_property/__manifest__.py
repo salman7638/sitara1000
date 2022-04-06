@@ -29,6 +29,7 @@
         'data/ir_server_data.xml',
         'wizard/assign_dealer_wizard.xml',
         'wizard/assign_token_wizard.xml',
+        'wizard/generate_booking_wizard.xml',
         'views/menuitem_views.xml',
         'views/property_views.xml',
         'views/product_views.xml',
