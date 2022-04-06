@@ -17,7 +17,7 @@
 
 <odoo>
      <report id="open_plot_status_report"
-            model="plot.status.wizard"
+            model="report.de_property_report.status_report_xlx"
             string="Plot Status Report"
             report_type="xlsx"
             name="de_property_report.status_report_xlx"

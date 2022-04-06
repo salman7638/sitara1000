@@ -30,10 +30,19 @@ class PlotStatusXlS(models.AbstractModel):
         
         sheet.set_column(1, 1, 20)
         sheet.set_column(2, 2, 20)
-        sheet.set_column(3, 3, 15)
-        sheet.set_column(4, 4, 10)
+        sheet.set_column(3, 3, 20)
+        sheet.set_column(4, 4, 20)
         sheet.set_column(5, 5, 20)
-        sheet.set_column(6, 6, 35)   
+        sheet.set_column(6, 6, 20)   
+        sheet.set_column(7, 7, 20)   
+        sheet.set_column(8, 8, 20)   
+        sheet.set_column(9, 9, 20)   
+        sheet.set_column(10, 10, 20)   
+        sheet.set_column(11, 11, 20)   
+        sheet.set_column(12, 12, 20)   
+        sheet.set_column(13, 13, 20)   
+            
+            
         sheet.write(2,0,'Phase', header_row_style)
         sheet.write(2,1 , 'Category',header_row_style)
         sheet.write(2,2 , 'No Of Plots',header_row_style)
