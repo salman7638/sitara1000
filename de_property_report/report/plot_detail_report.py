@@ -15,10 +15,30 @@ class PlotDetailXlS(models.AbstractModel):
         docs = self.env['plot.detail.wizard'].browse(self.env.context.get('active_id'))
         sheet = workbook.add_worksheet('Plot Detail Report')
         bold = workbook. add_format({'bold': True, 'align': 'center','bg_color': '#FFFF99','border': True})
-        title = workbook.add_format({'bold': True, 'align': 'center', 'font_size': 20, 'bg_color': '#FFFF99', 'border': True})
+        title = workbook.add_format({'bold': True, 'align': 'center', 'font_size': 15, 'border': True})
         header_row_style = workbook.add_format({'bold': True, 'align': 'center', 'border':True})
         format2 = workbook.add_format({'align': 'center'})
-        format3 = workbook.add_format({'align': 'center','bold': True,'border': True,})        
+        format3 = workbook.add_format({'align': 'center','bold': True,'border': True,}) 
+        
+        if docs.type=='available': 
+            sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
+            sheet.write('C2:D2', 'DETAIL OF AVAILABLE PLOTS' ,title)
+        elif docs.type=='unconfirm': 
+            sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
+            sheet.write('C2:D2', 'DETAIL OF UNCONFIRMED RESERVE PLOTS' ,title)
+        elif docs.type=='reserved': 
+            sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
+            sheet.write('C2:D2', 'DETAIL OF CONFIRMED RESERVE PLOTS' ,title)
+        elif docs.type=='booked': 
+            sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
+            sheet.write('C2:D2', 'DETAIL OF BOOKED PLOTS' ,title)
+        elif docs.type=='un_posted_sold': 
+            sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
+            sheet.write('C2:D2', 'DETAIL OF SOLD PLOTS' ,title)
+        elif docs.type=='posted_sold': 
+            sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
+            sheet.write('C2:D2', 'DETAIL OF ALL PLOTS' ,title)
+            
         
         sheet.set_column(1, 1, 20)
         sheet.set_column(2, 2, 20)
@@ -72,6 +92,8 @@ class PlotDetailXlS(models.AbstractModel):
             col_no += 1  
         sheet.write(2, col_no, "PHASE",header_row_style)
         if docs.type =='posted_sold':
+            sheet.write(2, col_no, 'PHASE',header_row_style)
+            col_no += 1
             sheet.write(2, col_no, 'TOTAL AMOUNT',header_row_style)
             col_no += 1 
             sheet.write(2, col_no, "AMOUNT RECEIVED TO-DATE",header_row_style)
@@ -96,7 +118,21 @@ class PlotDetailXlS(models.AbstractModel):
             amt_percent_received =  (adv_amount_received/plt.list_price) * 100 
             sheet.write(row, col_no, str(sr_no), format2)
             col_no += 1 
-            sheet.write(row, col_no, str(plt.state), format2)
+            plot_status=''
+            if plt.state=='available':
+                plot_status='Available'
+            elif plt.state=='unconfirm':
+                plot_status='Un-Confirm'
+            elif plt.state=='reserved':
+                plot_status='Reserved'
+            elif plt.state=='booked':
+                plot_status='Booked'
+            elif plt.state=='un_posted_sold':
+                plot_status='Un-Posted Sold'
+            elif plt.state=='posted_sold':
+                plot_status='Posted Sold'
+                
+            sheet.write(row, col_no, str(plot_status), format2)
             col_no += 1
             if docs.type!='available': 
                 sheet.write(row, col_no, str(plt.partner_id.name if plt.partner_id else ' '), format2)
@@ -105,7 +141,7 @@ class PlotDetailXlS(models.AbstractModel):
             col_no += 1
             sheet.write(row, col_no, str(plt.categ_id.name), format2)
             col_no += 1
-            sheet.write(row, col_no, str(plt.plot_area_marla), format2) 
+            sheet.write(row, col_no, str(round(plt.plot_area_marla,2)), format2) 
             col_no += 1
             if docs.type in ('reserved', 'booked', 'un_posted_sold'): 
                 sheet.write(row, col_no, '{0:,}'.format(int(round(adv_amount_received))), format2)
@@ -117,8 +153,9 @@ class PlotDetailXlS(models.AbstractModel):
                 col_no += 1
                 sheet.write(row, col_no, str(plt.date_validity), format2)
                 col_no += 1
-            sheet.write(row, 10, str(plt.property_location_id.location_id.name), format2)
             if docs.type =='posted_sold':
+                sheet.write(row, col_no, str(plt.property_location_id.location_id.name), format2)
+                col_no += 1
                 sheet.write(row, col_no, '{0:,}'.format(int(round(plt.list_price))), format2)
                 col_no += 1
                 sheet.write(row, col_no, '{0:,}'.format(int(round(plt.amount_paid))), format2)
@@ -127,8 +164,9 @@ class PlotDetailXlS(models.AbstractModel):
                 col_no += 1
                 sheet.write(row, col_no, '{0:,}'.format(int(round(0))), format2)
                 col_no += 1
-                sheet.write(row, col_no, str(), format2)
-                col_no += 1
+            if docs.type !='posted_sold':
+                sheet.write(row, col_no, str(plt.property_location_id.location_id.name), format2)
+                col_no += 0
                 
             col_no =0 
             sr_no += 1

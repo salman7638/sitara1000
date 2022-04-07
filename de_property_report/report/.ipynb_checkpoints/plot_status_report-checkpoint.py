@@ -22,10 +22,15 @@ class PlotStatusXlS(models.AbstractModel):
         plots = self.env['product.product'].search([])
         plot_location_list = []
         plot_location = self.env['op.property.location'].search([])
-        plot_categories = self.env['product.category'].search([]).ids
-        for plt_loc in plot_location_list:
-            plot_location_list.append(plt_loc.location_id.id)
-        uniq_location_list = set(plot_location_list)    
+        plot_categories = []
+        uniq_location_list = []
+        plot_category = self.env['product.category'].search([])
+        for plt_categ in plot_category:
+            plot_categories.append(plt_categ.id)
+        for plt_loc in plot_location:
+            if plt_loc.location_id:
+                plot_location_list.append(plt_loc.location_id.id)
+        uniq_location_list = set(plot_location_list)  
         uniq_category_list = set(plot_categories)
         
         sheet.set_column(1, 1, 20)
