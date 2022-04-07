@@ -22,6 +22,7 @@ class AssignDealerWizard(models.TransientModel):
         for line in self.product_ids:
             line.update({
                 'partner_id': self.partner_id.id,
+                'cnic': self.partner_id.nic,
                 'state': 'unconfirm',
                 'date_validity': self.date_validity ,
                 'booking_validity': self.booking_validity,

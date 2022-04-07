@@ -32,6 +32,7 @@ class generate_booking_wizard(models.TransientModel):
                 })
             line.update({
                 'partner_id': self.partner_id.id,
+                'cnic': self.partner_id.nic,
                 'state': 'reserved',
                 'booking_validity': self.date_reservation,
                 'date_validity': self.date_validity,

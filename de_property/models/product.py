@@ -82,6 +82,7 @@ class ProductTemplate(models.Model):
     allottment_amount = fields.Float(string='Allottment Amount')
     installment_amount = fields.Float(string='Installment Amount')
     partner_id = fields.Many2one('res.partner', string='Dealer/Customer')
+    cnic = fields.Char(string='CNIC')
     booking_id = fields.Many2one('sale.order', string='Booking')
     partner_role = fields.Char( string='Role')
     state = fields.Selection(selection=[
@@ -100,6 +101,8 @@ class ProductTemplate(models.Model):
     date_reservation = fields.Date(string='Date of Reservation')
     booking_validity = fields.Date(string='Booking Validity')
     date_validity = fields.Date(string='Date Validity')
+    
+    
     
 #     def action_sale_quotations_new(self):
 #         for property in self:

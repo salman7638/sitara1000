@@ -202,7 +202,8 @@
                                         <field name="booking_amount" readonly='1'/>
                                         <field name="allottment_amount"  readonly='1'/>
                                         <field name="installment_amount"  readonly='1'/>
-                                        <field name="partner_id"/>
+                                        <field name="partner_id" readonly='1'/>
+                                        <field name="cnic" />
                                         <field name="date_reservation"/>
                                         <field name="booking_validity"/>
                                         <field name="date_validity"/>
@@ -287,13 +288,16 @@
             <field name="arch" type="xml">
                 <tree string="Product Variants">
                     <field name="name"/>
-                    <field name="default_code"/>
+                    <field name="plot_area_marla"/>
+                    <field name="default_code" optional="hide"/>
+                    
                     <field name="partner_id"/>
+                    <field name="cnic"/>
                     <field name="booking_id"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="cost_currency_id" invisible="1"/>
                     <field name="priority" optional="hide" widget="priority" nolabel="1"/>
-                    <field name="responsible_id" widget="many2one_avatar_user"/>
+                    <field name="responsible_id" widget="many2one_avatar_user" optional="hide"  />
                     <field name="list_price"/>
                     <field name="amount_paid"/>
                     <field name="discount_amount"/>
@@ -334,7 +338,7 @@
       
         
         <record id="action_product_property_unit_variants" model="ir.actions.act_window">
-            <field name="name">Units</field>
+            <field name="name">Plots</field>
             <field name="res_model">product.product</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
@@ -350,7 +354,7 @@
             </field>
         </record>
         
-        <menuitem id="menu_product_property_unit_variants" name="Units" parent="menu_property_property"
+        <menuitem id="menu_product_property_unit_variants" name="Plots" parent="menu_property_property"
             action="action_product_property_unit_variants" groups="de_property.group_property_manager" sequence="20"/>
     </data>
 </odoo>

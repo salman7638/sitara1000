@@ -45,6 +45,7 @@ class AssignTokenWizard(models.TransientModel):
             if not line.partner_id:
                 line.update({
                 'partner_id':  self.partner_id.id,
+                'cnic': self.partner_id.nic,    
                 })    
         
         
