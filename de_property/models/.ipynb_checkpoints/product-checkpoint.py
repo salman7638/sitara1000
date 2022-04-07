@@ -75,6 +75,25 @@ class ProductTemplate(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    
+    def action_view_batch_payments(self):
+        self.ensure_one()
+        return {
+         'type': 'ir.actions.act_window',
+         'binding_type': 'object',
+         'domain': [('order_id', '=', self.id)],
+         'multi': False,
+         'name': 'Payments',
+         'target': 'current',
+         'res_model': 'account.batch.payment',
+         'view_mode': 'tree,form',
+        }
+    
+    def get_batch_bill_count(self):
+        count = self.env['account.batch.payment'].search_count([('order_id', '=', self.id)])
+        self.batch_bill_count = count
+        
+    batch_bill_count = fields.Integer(string='Payments', compute='get_batch_bill_count')
     premium_id = fields.Many2one('op.premium.factor', string='Premium')
     standard_price = fields.Float(string="Standard price")
     list_price = fields.Float(compute='_compute_sum')

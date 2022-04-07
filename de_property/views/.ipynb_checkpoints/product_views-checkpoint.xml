@@ -142,25 +142,11 @@
                         <field name="attribute_line_ids" invisible="1"/>
                         <field name="type" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="open_pricelist_rules" icon="fa-list-ul" groups="product.group_product_pricelist" type="object">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value">
-                                        <field name="pricelist_item_count"/>
-                                    </span>
-                                    <span attrs="{'invisible': [('pricelist_item_count', '=', 1)]}">
-                                        Extra Prices
-                                    </span>
-                                    <span attrs="{'invisible': [('pricelist_item_count', '!=', 1)]}">
-                                        Extra Price
-                                    </span>
-                               </div>
-                            </button>
-                            <button name="%(de_property.product_property_unit_variant_action)d" type="action" icon="fa-sitemap" class="oe_stat_button" attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}" groups="product.group_product_variant">
-                                <field string="Variants" name="product_variant_count" widget="statinfo" />
-                            </button>
-                            <button class="oe_stat_button" type="action" name="%(action_product_property_feature_all)d" icon="fa-list">
-                                <span>Features</span>
-                            </button>
+                            
+
+                           <button name="action_view_batch_payments" type="object" class="oe_stat_button" state='done' icon="fa-pencil-square-o"  attrs="{'invisible': [('batch_bill_count', '=', 0)]}">
+                        <field name="batch_bill_count" widget="statinfo" string="Batch Payments"/>
+                     </button> 
                             
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
