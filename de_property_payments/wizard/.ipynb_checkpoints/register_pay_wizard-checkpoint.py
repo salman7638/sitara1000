@@ -296,6 +296,7 @@ class RegisterPayWizard(models.TransientModel):
         batch_vals = {
             'batch_type': 'inbound',
             'journal_id': self.journal_id.id,
+            'order_id': self.sale_id.id,
             'date': self.date,
             'state': 'reconciled',
         } 
