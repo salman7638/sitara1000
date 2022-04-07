@@ -33,7 +33,8 @@ class AssignTokenWizard(models.TransientModel):
                 'type':  'token' ,
                 'payment_type': 'inbound' ,
                 }
-            record = self.env['account.payment'].sudo().create(vals)       
+            record = self.env['account.payment'].sudo().create(vals) 
+            record.action_post()      
             line.update({
                 'payment_ids':  record.ids,
                 'state': 'reserved',
