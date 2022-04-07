@@ -26,6 +26,7 @@
     'data': [
         'security/ir.model.access.csv',
         'wizard/register_pay_wizard.xml',
+        'views/account_batch_payment_views.xml',
         'wizard/register_installment_wizard.xml',
         'views/product_category_views.xml',
         'views/sale_order_views.xml',
