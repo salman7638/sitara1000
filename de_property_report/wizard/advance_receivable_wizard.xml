@@ -10,11 +10,12 @@
                         
                        <group>
                               <field name="date_from" />
+                              <field name="type" />  
                       </group>
                         
                       <group>
                         <field name="date_to" />
-                        <field name="type" />  
+                        
                       </group>                        
                         
                     </group>
@@ -37,8 +38,8 @@
         </record>
       
      
-       <menuitem id="menu_property_forcasted_receivable_report" name="Forcast Receivables" parent="de_property.menu_property_reporting"
-             sequence="10"/>
+       <menuitem id="menu_property_forcasted_receivable" name="Forcast Receivables" parent="menu_property_reporting"
+            action='open_advance_receivable_wizard_action'  sequence="13"/>
       
   </data>
 </odoo>

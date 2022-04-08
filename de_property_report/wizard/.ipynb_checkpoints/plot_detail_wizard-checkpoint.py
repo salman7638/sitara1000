@@ -8,8 +8,7 @@ class PlotDetailWizard(models.Model):
     _description = 'Plot Detail Wizard'
     
     
-    date_from = fields.Date(string='Date From', required=True)
-    date_to = fields.Date(string='Date To', required=True)
+    
     type = fields.Selection(selection=[
             ('available', 'Available Plots'),
             ('unconfirm', 'Un-Confirm Reserve Plots'),
@@ -22,10 +21,10 @@ class PlotDetailWizard(models.Model):
    
     def check_report(self):
         data = {}
-        data['form'] = self.read(['date_from', 'date_to', 'type'])[0]
+        data['form'] = self.read(['type'])[0]
         return self._print_report(data)
 
     
     def _print_report(self, data):
-        data['form'].update(self.read(['date_from', 'date_to', 'type'])[0])
+        data['form'].update(self.read(['type'])[0])
         return self.env.ref('de_property_report.open_plot_detail_report').report_action(self, data=data, config=False)

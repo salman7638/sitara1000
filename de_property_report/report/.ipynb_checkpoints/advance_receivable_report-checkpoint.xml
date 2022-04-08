@@ -2,7 +2,7 @@
 
 <odoo>
      <report id="open_adv_receivable_report"
-            model="advance.receivable.wizard"
+            model="report.de_property_report.adv_receive_xlx"
             string="Advance Receivable Report"
             report_type="xlsx"
             name="de_property_report.adv_receive_xlx"

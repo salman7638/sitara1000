@@ -9,12 +9,10 @@
                     <group>
                         
                        <group>
-                            <field name="date_from" />
                             <field name="type" />
                       </group>
                         
                       <group>
-                          <field name="date_to" />
                       </group>                        
                         
                     </group>
@@ -37,7 +35,7 @@
         </record>
       
        
-       <menuitem id="menu_property_plot_details" name="Plots Detail" parent="de_property.menu_property_reporting"  action='open_plot_detail_wizard_action'
+       <menuitem id="menu_property_plot_details" name="Plots Detail" parent="menu_property_reporting"  action='open_plot_detail_wizard_action'
              sequence="10"/>
       
   </data>
