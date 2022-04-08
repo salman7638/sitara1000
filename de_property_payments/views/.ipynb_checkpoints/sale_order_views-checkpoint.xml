@@ -97,7 +97,18 @@
                             <field name="order_id" invisible='1' />    
                          </tree>                         
                      </field> 
-                   </page>      
+                   </page>    
+                     <page string='Resellers' >
+                      <field name="reseller_ids" readonly='1'>
+                          <tree editable='bottom'> 
+                              <field name="partner_id" /> 
+                              <field name="date" />
+                              <field name="amount_paid" /> 
+                              <field name="amount_residual" /> 
+                              <field name="order_id"  invisible='1'/> 
+                          </tree>
+                      </field>    
+                   </page>    
                 </xpath>
                  
              </field>
