@@ -121,6 +121,8 @@
                         <group>
                             <group string="Additional Information" name="additional_info">
                                 <field name="active" invisible="1"/>
+                                <field name="phase_location"/>
+                                <field name="sequence"/>
                                 <field name="usage"/>
                             </group>
                         </group>

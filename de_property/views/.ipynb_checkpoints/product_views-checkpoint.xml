@@ -305,7 +305,7 @@
         </record>
         
         <record id="action_product_property_units" model="ir.actions.act_window">
-            <field name="name">Units</field>
+            <field name="name">Plots</field>
             <field name="res_model">product.template</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
