@@ -19,37 +19,77 @@ class AdvanceReceivableXlS(models.AbstractModel):
         header_row_style = workbook.add_format({'bold': True, 'align': 'center', 'border':True})
         format2 = workbook.add_format({'align': 'center'})
         format3 = workbook.add_format({'align': 'center','bold': True,'border': True,})        
-        plots = self.env['product.product'].search([('state','in',('unconfirm','reserved','booked','un_posted_sold'))])
-#         for plt in plots:
-                      
+        
         sheet.set_column(1, 1, 20)
         sheet.set_column(2, 2, 20)
         sheet.set_column(3, 3, 15)
         sheet.set_column(4, 4, 10)
         sheet.set_column(5, 5, 20)
         sheet.set_column(6, 6, 35)   
-        sheet.write(2,0,'SR.NO', header_row_style)
-        sheet.write(2,1 , 'DATE',header_row_style)
-        sheet.write(2,2 , 'PLOT NO.',header_row_style)
-        sheet.write(2,3 , "AMOUNT",header_row_style)
-        sheet.write(2,4 , 'REMARKS',header_row_style) 
+        sheet.write(2,0,  'SR.NO', header_row_style)
+        sheet.write(2,1 , 'DATE',  header_row_style)
+        sheet.write(2,2 , 'PLOT NO.', header_row_style)
+        sheet.write(2,3 , "AMOUNT",  header_row_style)
+        sheet.write(2,4 , 'REMARKS', header_row_style) 
         row = 3
-#         for phase in uniq_location_list:    
-#             sheet.write(row, 0, str(plot_phase.name), format2)
-#             sheet.write(row, 1, str(plot_category.name), format2) 
-#             sheet.write(row, 2, '{0:,}'.format(int(round(total_number_of_plots))), format2)
-#             grand_total_number_of_plots += total_number_of_plots
-#             sheet.write(row, 3, '{0:,}'.format(int(round(total_number_of_marlas))), format2)
-#             grand_total_number_of_marlas += total_number_of_marlas
-#             sheet.write(row, 4, '{0:,}'.format(int(round(available_total_number_of_plots))), format2)
-#             grand_available_total_number_of_plots += available_total_number_of_plots
-#             row += 1
+        date_wise_receivables = []
+        unconfirm_plot_list = self.env['product.product'].search([('state','=','unconfirm'),('booking_validity', '>=' , docs.date_from),('booking_validity', '<=' , docs.date_to) ])
+        for unconf_plot in unconfirm_plot_list:            
+            line_vals = {
+                'date':  unconf_plot.booking_validity,
+                'plot_no':  unconf_plot.name , 
+                'amount':   unconf_plot.booking_amount ,
+                'remarks': '' ,
+            }
+            date_wise_receivables.append(line_vals)
             
-#         sheet.write(row, 0, str(), header_row_style)
-#         sheet.write(row, 1, str(), header_row_style) 
-#         sheet.write(row, 2, '{0:,}'.format(int(round(grand_total_number_of_plots))), header_row_style)
-#         sheet.write(row, 3, '{0:,}'.format(int(round(grand_total_number_of_marlas))), header_row_style)
-#         sheet.write(row, 4, '{0:,}'.format(int(round(grand_available_total_number_of_plots))), header_row_style) 
+        reserve_plot_list = self.env['product.product'].search([('state','=','reserved'),('booking_validity', '>=' , docs.date_from),('booking_validity', '<=' , docs.date_to) ])
+        for reserve_plot in reserve_plot_list:  
+            if not reserve_plot.booking_id:
+                token_amt = reserve_plot.booking_amount - reserve_plot.amount_paid
+                line_vals = {
+                    'date':  reserve_plot.booking_validity,
+                    'plot_no':  reserve_plot.name , 
+                    'amount':  token_amt if token_amt > 0 else 0,
+                    'remarks': '' ,
+                }
+                date_wise_receivables.append(line_vals)                
+            elif reserve_plot.booking_id:
+                line_vals = {
+                    'date':  reserve_plot.booking_validity,
+                    'plot_no':  reserve_plot.name , 
+                    'amount':  reserve_plot.booking_id.booking_amount_residual,
+                    'remarks': '' ,
+                }
+                date_wise_receivables.append(line_vals)
+                
+        booked_plot_list = self.env['product.product'].search([('state','=','booked'),('date_validity', '>=' , docs.date_from),('date_validity', '<=' , docs.date_to) ])
+        for book_plot in booked_plot_list:  
+            if book_plot.booking_id:
+                line_vals = {
+                    'date':  book_plot.date_validity ,
+                    'plot_no': book_plot.name , 
+                    'amount':  book_plot.booking_id.allotment_amount_residual ,
+                    'remarks': '' ,
+                }
+                date_wise_receivables.append(line_vals)   
+                
+        sr_no = 1 
+        total_amount = 0
+        for receiv in date_wise_receivables:             
+            sheet.write(row, 0, str(sr_no), format2)
+            sheet.write(row, 1, str(receiv['date']), format2) 
+            sheet.write(row, 2, str(receiv['plot_no']), format2)
+            sheet.write(row, 3, '{0:,}'.format(int(round(receiv['amount']))), format2)
+            total_amount += float(receiv['amount'])
+            sheet.write(row, 4, str(receiv['remarks']), format2) 
+            row += 1
+            sr_no += 1
             
-#         row += 1
+        sheet.write(row, 0, str(), header_row_style)
+        sheet.write(row, 1, str(), header_row_style) 
+        sheet.write(row, 2, str(), header_row_style)
+        sheet.write(row, 3, str('{0:,}'.format(int(round(total_amount)))), header_row_style)
+        sheet.write(row, 4, str(), header_row_style)       
+        row += 1
             

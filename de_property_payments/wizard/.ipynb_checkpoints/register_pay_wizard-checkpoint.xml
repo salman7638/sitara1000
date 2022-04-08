@@ -17,6 +17,7 @@
                            <field name="allow_amount" invisible='1' />
                            <field name="partner_id" readonly='1'/>
                            <field name="installment_id" readonly='1'/>
+                           <field name="remarks" />
                       </group>
                       <group>
                           <field name="type"  />

@@ -29,9 +29,12 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'wizard/plot_status_wizard.xml',
+        'wizard/plot_detail_wizard.xml',
         'wizard/advance_receivable_wizard.xml',
-#         'wizard/plot_status_wizard.xml',
-#         'report/plot_status_report.xml',
+        'report/plot_detail_report.xml',
+        'report/plot_status_report.xml',
+        'report/plot_detail_report.xml',
         'report/advance_receivable_report.xml',
         'report/booking_report.xml',
         'report/booking_template.xml',

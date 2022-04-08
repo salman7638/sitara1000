@@ -10,6 +10,7 @@
                        <field name='order_id' string='Booking/Allotment' invisible='1'/>
                        <field name='type'  invisible='1'/>
                        <field name='installment_id'  invisible='1'/>
+                       <field name='remarks' attrs="{'readonly': [('state', '=', 'posted')]}" />
                 </xpath>                 
              </field>
           </record> 
