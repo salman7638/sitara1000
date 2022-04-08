@@ -4,8 +4,8 @@ from odoo.exceptions import UserError
 class saleorder(models.Model):
     _inherit = 'sale.order'
     
-    @api.constrains('partner_id')
-    def _check_partner(self):
+    @api.onchange('partner_id')
+    def _onchange_partner(self):
         if self.partner_id:
              self.father_husband_name = self.partner_id.father_husband_name
              self.nic = self.partner_id.nic
@@ -43,8 +43,8 @@ class SaleOrderLine(models.Model):
     size = fields.Char(string="Size")
     
     
-    @api.constrains('product_id')
-    def _check_partner(self):
+    @api.onchange('product_id')
+    def _onchange_partner(self):
         if self.product_id:
             self.plot_type = self.product_id.property_type_id.name
             self.rate_area_marla = self.product_id.plot_file

@@ -112,11 +112,11 @@ class SaleOrder(models.Model):
                 diff_advance_amt = total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - diff_advance_amt
             line.update({
-                'amount_paid':  total_paid_amount,
-                'amount_residual':  residual_amount,
-                'booking_amount_residual':  booking_amount if booking_amount > 0 else 0,
-                'allotment_amount_residual': allotment_amount if allotment_amount > 0 else 0,
-                'installment_amount_residual':installment_amount if installment_amount > 0 else 0, 
+                'amount_paid':  round(total_paid_amount),
+                'amount_residual': round(residual_amount),
+                'booking_amount_residual': round(booking_amount if booking_amount > 0 else 0),
+                'allotment_amount_residual': round(allotment_amount if allotment_amount > 0 else 0),
+                'installment_amount_residual':(installment_amount if installment_amount > 0 else 0), 
             })
             if line.amount_paid >= ((line.amount_total)/100) * 10:
                 line.received_percent = 10

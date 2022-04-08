@@ -8,6 +8,8 @@ class AccountPayment(models.Model):
     _inherit = 'account.payment'
     
     order_id = fields.Many2one('sale.order', string='Order')
+    processing_fee_submit = fields.Boolean(string='Processing Fee Submitted')
+    membership_fee_submit = fields.Boolean(string='Membership Fee Submitted')
     installment_id = fields.Many2one('order.installment.line', string='Order Installment')
     remarks = fields.Char(string='Remarks')    
     type = fields.Selection([
@@ -32,6 +34,15 @@ class AccountPayment(models.Model):
                line.order_id.update({
                    'state': 'draft'
                }) 
+            if line.type=='fee':
+                if line.processing_fee_submit== True:
+                    line.order_id.update({
+                       'processing_fee_submit': False
+                    }) 
+            if line.membership_fee_submit== True:
+                    line.order_id.update({
+                       'membership_fee_submit': False
+                    }) 
             res = super(AccountPayment, line).action_cancel()
             return  res
     

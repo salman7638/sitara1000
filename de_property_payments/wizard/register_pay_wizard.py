@@ -69,6 +69,7 @@ class RegisterPayWizard(models.TransientModel):
                      'payment_type': 'inbound',
                      'order_id': self.sale_id.id,
                      'type': 'fee',
+                     'processing_fee_submit': True,
                      }
                     record = self.env['account.payment'].sudo().create(vals)
                     record.action_post()
@@ -91,6 +92,7 @@ class RegisterPayWizard(models.TransientModel):
                      'payment_type': 'inbound',
                      'order_id': self.sale_id.id,
                      'type': 'fee',
+                     'membership_fee_submit': True,
                      }
                     record = self.env['account.payment'].sudo().create(vals)
                     record.action_post()

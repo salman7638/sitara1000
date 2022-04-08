@@ -47,7 +47,7 @@ class SaleOrderLine(models.Model):
     def _check_partner(self):
         if self.product_id:
             self.plot_type = self.product_id.property_type_id.name
-            self.rate_area_marla = self.product_id.plot_file
-            self.size = self.product_id.plot_area_marla
+            self.rate_area_marla = round(self.product_id.plot_file,2)
+            self.size = round(self.product_id.plot_area_marla,2)
     
 
