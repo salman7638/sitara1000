@@ -5,6 +5,8 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 
 
+
+
 class AdvanceReceivableXlS(models.AbstractModel):
     _name = 'report.de_property_report.adv_receive_xlx'
     _description = 'Advance Receivable report'
