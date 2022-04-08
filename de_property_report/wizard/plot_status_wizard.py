@@ -9,6 +9,11 @@ class PlotStatusWizard(models.Model):
     
     
     date = fields.Date(string='Date', required=True, default=fields.date.today() )
+    phase_ids = fields.Many2many('op.property.location', string='Phases')
+    
+    @api.onchange('date')
+    def onchange_date(self):
+        self.phase_ids=self.env['op.property.location'].search([('phase_location','=',True)], order='sequence ASC').ids
     
     def check_report(self):
         data = {}
