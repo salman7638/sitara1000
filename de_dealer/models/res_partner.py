@@ -5,15 +5,17 @@ from odoo.exceptions import UserError
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
+    
     active_dealer = fields.Boolean(string='Is Dealer')
+    
     
     @api.model
     def create(self, vals):
-        if 'vat' in vals:
-            if vals['vat']:
-                vat = vals['vat'].strip().lower()
+        if 'nic' in vals:
+            if vals['nic']:
+                nic = vals['nic'].strip().lower()
                  
-                sql = """ select lower(vat) from res_partner where lower(vat)='""" +str(vat)+"""' """
+                sql = """ select lower(nic) from res_partner where lower(nic)='""" +str(nic)+"""' """
                 self.env.cr.execute(sql)
                 exists = self.env.cr.fetchone()
                 

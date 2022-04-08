@@ -5,6 +5,20 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
     
+    
+    def action_view_batch_payments(self):
+        self.ensure_one()
+        return {
+         'type': 'ir.actions.act_window',
+         'binding_type': 'object',
+         'domain': [('order_id', '=', self.id)],
+         'multi': False,
+         'name': 'Payments',
+         'target': 'current',
+         'res_model': 'account.batch.payment',
+         'view_mode': 'tree,form',
+        }
+    
     def action_view_payments(self):
         self.ensure_one()
         return {
@@ -23,6 +37,12 @@ class SaleOrder(models.Model):
         self.bill_count = count
         
     bill_count = fields.Integer(string='Payments', compute='get_bill_count')
+    
+    def get_batch_bill_count(self):
+        count = self.env['account.batch.payment'].search_count([('order_id', '=', self.id)])
+        self.batch_bill_count = count
+        
+    batch_bill_count = fields.Integer(string='Payments', compute='get_batch_bill_count')
     amount_paid = fields.Float(string='Total Amount Paid', compute='_compute_property_amount')
     booking_amount_residual = fields.Float(string='Booking Amount Due')
     allotment_amount_residual = fields.Float(string='Allotment Amount Due')
@@ -92,11 +112,11 @@ class SaleOrder(models.Model):
                 diff_advance_amt = total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - diff_advance_amt
             line.update({
-                'amount_paid':  total_paid_amount,
-                'amount_residual':  residual_amount,
-                'booking_amount_residual':  booking_amount if booking_amount > 0 else 0,
-                'allotment_amount_residual': allotment_amount if allotment_amount > 0 else 0,
-                'installment_amount_residual':installment_amount if installment_amount > 0 else 0, 
+                'amount_paid':  round(total_paid_amount),
+                'amount_residual': round(residual_amount),
+                'booking_amount_residual': round(booking_amount if booking_amount > 0 else 0),
+                'allotment_amount_residual': round(allotment_amount if allotment_amount > 0 else 0),
+                'installment_amount_residual':(installment_amount if installment_amount > 0 else 0), 
             })
             if line.amount_paid >= ((line.amount_total)/100) * 10:
                 line.received_percent = 10

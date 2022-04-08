@@ -2,12 +2,14 @@
 from odoo import models, fields, api, _
 
 
+
+
 class AccountPayment(models.Model):
     _inherit = 'account.payment'
     
     order_id = fields.Many2one('sale.order', string='Order')
     installment_id = fields.Many2one('order.installment.line', string='Order Installment')
-    
+    remarks = fields.Char(string='Remarks')    
     type = fields.Selection([
         ('token','Token'),
         ('fee', 'Fee'),

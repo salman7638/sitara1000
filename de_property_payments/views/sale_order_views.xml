@@ -79,6 +79,9 @@
                      <button name="action_view_payments" type="object" class="oe_stat_button" state='done' icon="fa-pencil-square-o"  attrs="{'invisible': [('bill_count', '=', 0)]}">
                         <field name="bill_count" widget="statinfo" string="Payments"/>
                      </button>  
+                    <button name="action_view_batch_payments" type="object" class="oe_stat_button" state='done' icon="fa-pencil-square-o"  attrs="{'invisible': [('batch_bill_count', '=', 0)]}">
+                        <field name="batch_bill_count" widget="statinfo" string="Batch Payments"/>
+                     </button>  
                 </xpath>
                  <xpath expr="//notebook" position="inside">
                      <page string='Installments' >

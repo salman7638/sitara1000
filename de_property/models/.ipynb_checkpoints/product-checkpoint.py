@@ -14,6 +14,7 @@ class ProductTemplate(models.Model):
                 line.update({
                     'state': 'available',
                     'partner_id': False,
+                    'cnic': '',
                 })
                 if line.payment_ids:
                     for pay in line.payment_ids:
@@ -75,6 +76,25 @@ class ProductTemplate(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    
+    def action_view_batch_payments(self):
+        self.ensure_one()
+        return {
+         'type': 'ir.actions.act_window',
+         'binding_type': 'object',
+         'domain': [('order_id', '=', self.id)],
+         'multi': False,
+         'name': 'Payments',
+         'target': 'current',
+         'res_model': 'account.batch.payment',
+         'view_mode': 'tree,form',
+        }
+    
+    def get_batch_bill_count(self):
+        count = self.env['account.batch.payment'].search_count([('order_id', '=', self.id)])
+        self.batch_bill_count = count
+        
+    batch_bill_count = fields.Integer(string='Payments', compute='get_batch_bill_count')
     premium_id = fields.Many2one('op.premium.factor', string='Premium')
     standard_price = fields.Float(string="Standard price")
     list_price = fields.Float(compute='_compute_sum')
@@ -82,6 +102,7 @@ class ProductTemplate(models.Model):
     allottment_amount = fields.Float(string='Allottment Amount')
     installment_amount = fields.Float(string='Installment Amount')
     partner_id = fields.Many2one('res.partner', string='Dealer/Customer')
+    cnic = fields.Char(string='CNIC')
     booking_id = fields.Many2one('sale.order', string='Booking')
     partner_role = fields.Char( string='Role')
     state = fields.Selection(selection=[
@@ -100,6 +121,8 @@ class ProductTemplate(models.Model):
     date_reservation = fields.Date(string='Date of Reservation')
     booking_validity = fields.Date(string='Booking Validity')
     date_validity = fields.Date(string='Date Validity')
+    
+    
     
 #     def action_sale_quotations_new(self):
 #         for property in self:
@@ -146,9 +169,9 @@ class ProductTemplate(models.Model):
                 line.list_price = total_amount + (line.property_amenities_id.percent * (total_amount / 100))   
             else:
                 line.list_price=0
-            line.booking_amount= ((line.list_price-line.commission_amount-line.discount_amount)/100)*10   
-            line.allottment_amount= ((line.list_price-line.commission_amount-line.discount_amount)/100)*15
-            line.installment_amount=((line.list_price-line.commission_amount-line.discount_amount)/100)*75
+            line.booking_amount= ((line.list_price-line.discount_amount)/100)*10   
+            line.allottment_amount= ((line.list_price-line.discount_amount)/100)*15
+            line.installment_amount=((line.list_price-line.discount_amount)/100)*75
             
     can_be_property = fields.Boolean(string="Can be Property", compute='_compute_can_be_property',
         store=True, readonly=False, help="Specify whether the product can be selected in a property.")
