@@ -44,6 +44,7 @@
         'report/payment_schedule_template.xml',
         'report/payment_report.xml',
         'report/payment_template.xml',
+        'views/product_category_views.xml',
         
     ],
     # only loaded in demonstration mode
