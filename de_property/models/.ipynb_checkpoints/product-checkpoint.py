@@ -14,6 +14,7 @@ class ProductTemplate(models.Model):
                 line.update({
                     'state': 'available',
                     'partner_id': False,
+                    'cnic': '',
                 })
                 if line.payment_ids:
                     for pay in line.payment_ids:
