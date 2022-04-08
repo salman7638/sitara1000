@@ -39,7 +39,7 @@ class AccountPayment(models.Model):
                     line.order_id.update({
                        'processing_fee_submit': False
                     }) 
-             if line.membership_fee_submit== True:
+            if line.membership_fee_submit== True:
                     line.order_id.update({
                        'membership_fee_submit': False
                     }) 
