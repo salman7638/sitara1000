@@ -302,6 +302,9 @@ class RegisterPayWizard(models.TransientModel):
         } 
         batch=self.env['account.batch.payment'].create(batch_vals)
         batch.payment_ids=batch_payment_list
+        batch.update({
+           'state': 'reconciled',
+        })
         self.sale_id.action_confirm_booking()
         self.sale_id.action_register_allottment()                    
         self.sale_id._compute_property_amount()                    
