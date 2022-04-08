@@ -34,7 +34,7 @@ class AccountPayment(models.Model):
                line.order_id.update({
                    'state': 'draft'
                }) 
-            if line.type='fee':
+            if line.type=='fee':
                 if line.processing_fee_submit== True:
                     line.order_id.update({
                        'processing_fee_submit': False
