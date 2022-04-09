@@ -236,6 +236,8 @@ class OPPropertylocation(models.Model):
     location_id = fields.Many2one('op.property.location', 'Parent Location', index=True, ondelete='cascade', help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
     child_ids = fields.One2many('op.property.location', 'location_id', 'Contains')
     comment = fields.Html('Additional Information')
+    sequence = fields.Integer(string='Sequence', default=1)
+    phase_location = fields.Boolean(string='Phase Location')
     
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):

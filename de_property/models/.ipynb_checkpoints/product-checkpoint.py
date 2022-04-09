@@ -38,7 +38,11 @@ class ProductTemplate(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_product_ids': selected_records.ids,'default_partner_id': self.partner_id.id},
+            'context': {'default_product_ids': selected_records.ids,
+                        'default_partner_id': self.partner_id.id,
+                        'default_date_reservation': self.booking_validity,
+                        'default_date_validity': self.date_validity,
+                       },
         }
     
     def action_assign_token(self):
@@ -166,12 +170,12 @@ class ProductTemplate(models.Model):
         for line in self:
             if float(line.plot_area_marla) > 0.0 and float(line.plot_file) > 0.0:
                 total_amount = float(line.plot_area_marla) * float(line.plot_file)
-                line.list_price = total_amount + (line.property_amenities_id.percent * (total_amount / 100))   
+                line.list_price = round(total_amount + (line.property_amenities_id.percent * (total_amount / 100)))
             else:
                 line.list_price=0
-            line.booking_amount= ((line.list_price-line.discount_amount)/100)*10   
-            line.allottment_amount= ((line.list_price-line.discount_amount)/100)*15
-            line.installment_amount=((line.list_price-line.discount_amount)/100)*75
+            line.booking_amount= round(((line.list_price-line.discount_amount)/100)*10) 
+            line.allottment_amount= round(((line.list_price-line.discount_amount)/100)*15)
+            line.installment_amount=round(((line.list_price-line.discount_amount)/100)*75)
             
     can_be_property = fields.Boolean(string="Can be Property", compute='_compute_can_be_property',
         store=True, readonly=False, help="Specify whether the product can be selected in a property.")

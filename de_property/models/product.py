@@ -38,7 +38,11 @@ class ProductTemplate(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_product_ids': selected_records.ids,'default_partner_id': self.partner_id.id},
+            'context': {'default_product_ids': selected_records.ids,
+                        'default_partner_id': self.partner_id.id,
+                        'default_date_reservation': self.booking_validity,
+                        'default_date_validity': self.date_validity,
+                       },
         }
     
     def action_assign_token(self):

@@ -9,6 +9,13 @@ class AccountBatchPayment(models.Model):
     
     order_id = fields.Many2one('sale.order', string='Order')
     
+    def unlink(self):
+        for pay in self.payment_ids:
+            pay.action_cancel()
+        res = super(AccountBatchPayment,self).unlink()
+        
+        return res
+    
     
     
     

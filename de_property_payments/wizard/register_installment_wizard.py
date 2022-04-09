@@ -12,13 +12,12 @@ class RegisterInstallmentWizard(models.TransientModel):
     
 
     number_of_installment = fields.Integer(string='Number Of Installment', required=True)
+    date = fields.Date(string='Installment Start Date', required=True)
     sale_id = fields.Many2many('sale.order', string='Order')
     
     def action_confirm(self):
         installment_days =(921/self.number_of_installment)
-        installment_date = fields.date.today()
-        for sale in self.sale_id:            
-            installment_date = self.sale_id.date_order
+        installment_date = self.date
         installment_count = 0
         for installment in range(self.number_of_installment):            
             installment_count += 1
