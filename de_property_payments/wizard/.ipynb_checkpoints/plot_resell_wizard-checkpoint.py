@@ -19,6 +19,7 @@ class PlotResellWizard(models.TransientModel):
     def action_confirm(self):
         resell_vals={
             'partner_id': self.reseller_id.id,
+            'customer_id': self.partner_id.id,
             'date': self.resell_date,
             'order_id': self.sale_id.id,
             'amount_paid': self.sale_id.amount_paid,

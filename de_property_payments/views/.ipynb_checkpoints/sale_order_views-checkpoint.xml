@@ -99,10 +99,11 @@
                      </field> 
                    </page>    
                      <page string='Resellers' >
-                      <field name="reseller_ids" readonly='1'>
+                      <field name="reseller_ids" attrs="{'readonly': [('state', '=', 'done')]}">
                           <tree editable='bottom'> 
                               <field name="partner_id" /> 
                               <field name="date" />
+                              <field name="customer_id" />
                               <field name="amount_paid" /> 
                               <field name="amount_residual" /> 
                               <field name="order_id"  invisible='1'/> 

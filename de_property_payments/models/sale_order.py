@@ -189,6 +189,7 @@ class SaleOrder(models.Model):
     
     def action_confirm_booking(self):
         for line in self:
+            
             if line.amount_paid >= ((line.amount_total)/100) * 10:
                 line.update({
                     'state': 'booked',
@@ -207,6 +208,7 @@ class SaleOrder(models.Model):
     
     def action_register_allottment(self):
         for line in self:
+            
             if line.amount_paid >= ((line.amount_total)/100) * 25:
                 line.update({
                     'state': 'sale',
@@ -232,7 +234,7 @@ class SaleOrder(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_sale_id': self.ids},
+            'context': {'default_sale_id': self.ids,'default_date': self.date_order},
         }
     
  
@@ -288,6 +290,7 @@ class PlotsReseller(models.Model):
     _descrption='Plot Reseller Lines'
     
     partner_id = fields.Many2one('res.partner', string='Reseller', required=True)
+    customer_id = fields.Many2one('res.partner', string='Customer', required=True)
     date = fields.Date(string='Reselling Date', required=True)
     amount_paid = fields.Float(string='Amount Paid', required=True)
     amount_residual = fields.Float(string='Amount Due', required=True)
