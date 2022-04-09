@@ -23,8 +23,8 @@ class AdvanceReceivableXlS(models.AbstractModel):
         format3 = workbook.add_format({'align': 'center','bold': True,'border': True,})                
         sheet.set_column(1, 1, 20)
         sheet.set_column(2, 2, 20)
-        sheet.set_column(3, 3, 15)
-        sheet.set_column(4, 4, 10)
+        sheet.set_column(3, 3, 25)
+        sheet.set_column(4, 4, 30)
         sheet.set_column(5, 5, 20)
         sheet.set_column(6, 6, 35)
         
@@ -52,6 +52,7 @@ class AdvanceReceivableXlS(models.AbstractModel):
         date_wise_receivables = []
         monthly_receivables = []
         yearly_receivables = []
+        """
         unconfirm_plot_list = self.env['product.product'].search([('state','=','unconfirm'),('booking_validity', '>=' , docs.date_from),('booking_validity', '<=' , docs.date_to) ])
         for unconf_plot in unconfirm_plot_list:
             line_vals = {
@@ -81,17 +82,32 @@ class AdvanceReceivableXlS(models.AbstractModel):
                     'remarks': '' ,
                 }
                 date_wise_receivables.append(line_vals)
-                
-        booked_plot_list = self.env['product.product'].search([('state','=','booked'),('date_validity', '>=' , docs.date_from),('date_validity', '<=' , docs.date_to) ])
+        """        
+        booked_plot_list = self.env['product.product'].search([('state','in',('booked','un_posted_sold')),('date_validity', '>=' , docs.date_from),('date_validity', '<=' , docs.date_to) ])
         for book_plot in booked_plot_list:  
             if book_plot.booking_id:
-                line_vals = {
-                    'date':  book_plot.date_validity ,
-                    'plot_no': book_plot.name , 
-                    'amount':  book_plot.booking_id.allotment_amount_residual ,
-                    'remarks': '' ,
-                }
-                date_wise_receivables.append(line_vals)  
+                if book_plot.booking_id.allotment_amount_residual > 0:
+                    line_vals = {
+                        'date':  book_plot.date_validity ,
+                        'plot_no': book_plot.name , 
+                        'amount':  book_plot.booking_id.allotment_amount_residual ,
+                        'remarks': 'Allotment Amount Residual' ,
+                    }
+                    date_wise_receivables.append(line_vals)
+                    
+        plot_installment_list = self.env['product.product'].search([('state','in',('booked','un_posted_sold'))])
+        for plot_installment in plot_installment_list:  
+            if plot_installment.booking_id:
+                if plot_installment.booking_id.installment_amount_residual > 0:
+                    for installment in plot_installment.booking_id.installment_line_ids:
+                        if installment.date >= docs.date_from and installment.date <= docs.date_to and installment.remarks!='Paid' and installment.amount_residual > 0:
+                            line_vals = {
+                                'date':  installment.date ,
+                                'plot_no': plot_installment.name , 
+                                'amount':  installment.amount_residual ,
+                                'remarks': installment.name ,
+                            }
+                            date_wise_receivables.append(line_vals)            
                 
         if  docs.type=='month':
             month_list = []
