@@ -34,6 +34,7 @@
         'wizard/advance_receivable_wizard.xml',
         'report/plot_detail_report.xml',
         'report/plot_status_report.xml',
+        'report/plot_pdf_status_report.xml',
         'report/plot_detail_report.xml',
         'report/advance_receivable_report.xml',
         'report/booking_report.xml',
@@ -44,6 +45,7 @@
         'report/payment_schedule_template.xml',
         'report/payment_report.xml',
         'report/payment_template.xml',
+        'views/product_category_views.xml',
         
     ],
     # only loaded in demonstration mode
