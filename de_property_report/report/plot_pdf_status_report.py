@@ -33,43 +33,33 @@ class OvertimeReport(models.AbstractModel):
                 plot_location_list.append(plt_loc.location_id.id)
         uniq_location_list = set(plot_location_list)  
         uniq_category_list = set(plot_categories)
-#         uniq_category_list=[]
+        
+        my_list = []
+        
         for phase in uniq_location_list:
+            mydict = {'plot_category': '','plot_phase':''}
+            
             phase_count=0
-            grand_total_number_of_plots = 0
-            grand_total_number_of_marlas = 0
-            grand_available_total_number_of_plots = 0
-            grand_available_total_number_of_marlas = 0
-            grand_unconfirm_total_number_of_plots = 0
-            grand_unconfirm_total_number_of_marlas = 0
-            grand_reserve_total_number_of_plots = 0
-            grand_reserve_total_number_of_marlas = 0
-            grand_booked_total_number_of_plots = 0
-            grand_booked_total_number_of_marlas = 0
-            grand_sold_total_number_of_plots = 0
+            grand_total_number_of_plots = grand_total_number_of_marlas = grand_available_total_number_of_plots = grand_available_total_number_of_marlas = 0
+            grand_unconfirm_total_number_of_plots = grand_unconfirm_total_number_of_marlas = grand_reserve_total_number_of_plots = 0
+            grand_reserve_total_number_of_marlas = grand_booked_total_number_of_plots = grand_booked_total_number_of_marlas = grand_sold_total_number_of_plots = 0
             grand_sold_total_number_of_marlas = 0 
+            
             plot_phase = self.env['op.property.location'].search([('id','=', phase)], limit=1)
+            if phase_count==0:
+                mydict['plot_phase'] = plot_phase.name
+                phase_count += 1
+                    
             
             for categ in uniq_category_list:
-                uniq_category_list=[]
-                total_number_of_plots = 0
-                total_number_of_marlas = 0
-                available_total_number_of_plots = 0
-                available_total_number_of_marlas = 0
-                unconfirm_total_number_of_plots = 0
-                unconfirm_total_number_of_marlas = 0
-                reserve_total_number_of_plots = 0
-                reserve_total_number_of_marlas = 0
-                booked_total_number_of_plots = 0
-                booked_total_number_of_marlas = 0
-                sold_total_number_of_plots = 0
-                sold_total_number_of_marlas = 0 
+
+                total_number_of_plots = total_number_of_marlas = available_total_number_of_plots = available_total_number_of_marlas = unconfirm_total_number_of_plots = 0
+                unconfirm_total_number_of_marlas = reserve_total_number_of_plots = reserve_total_number_of_marlas = booked_total_number_of_plots = 0
+                booked_total_number_of_marlas = sold_total_number_of_plots = sold_total_number_of_marlas = 0 
+                
                 plot_category = self.env['product.category'].search([('id','=', categ)], limit=1)
                 phase_plots = self.env['product.product'].search([('categ_id','=', plot_category.id),('property_location_id.location_id','=',plot_phase.id)] )
                 
-                
-                mydict = {'plot_category': '','plot_phase':''}
-               
                 for pl in phase_plots:
                     
                     total_number_of_plots += 1
@@ -89,11 +79,46 @@ class OvertimeReport(models.AbstractModel):
                     if pl.state in ('un_posted_sold','posted_sold'):
                         sold_total_number_of_plots += 1
                         sold_total_number_of_marlas += pl.plot_area_marla 
-                        
-                        mydict['plot_phase'] = plot_phase.name
-                        mydict['plot_category'] = plot_category.name
+                
+                mydict['plot_category'] = plot_category.name
+                mydict['total_number_of_plots'] = total_number_of_plots
+                mydict['total_number_of_marlas'] = total_number_of_marlas
+                mydict['available_total_number_of_plots'] = available_total_number_of_plots
+                mydict['available_total_number_of_marlas'] = available_total_number_of_marlas
+                mydict['unconfirm_total_number_of_plots'] = unconfirm_total_number_of_plots
+                mydict['unconfirm_total_number_of_marlas'] = unconfirm_total_number_of_marlas
+                mydict['reserve_total_number_of_plots'] = reserve_total_number_of_plots
+                mydict['reserve_total_number_of_marlas'] = reserve_total_number_of_marlas
+                mydict['booked_total_number_of_plots'] = booked_total_number_of_plots
+                mydict['booked_total_number_of_marlas'] = booked_total_number_of_marlas
+                mydict['sold_total_number_of_plots'] = sold_total_number_of_plots
+                mydict['sold_total_number_of_marlas'] = sold_total_number_of_marlas
+      
+                
+                
+                
 
-                        uniq_category_list.append(mydict)
+                
+                
+                
+                
+                
+                
+
+                
+                
+                
+                
+                
+
+                
+
+
+                my_list.append(mydict)
+            
+            
+#             last_list.append(my_list)
+#             print("Print my Last list ***************** ",last_list)
 
 #                 uniq_category_list.append({
 #                     'plot_category': plot_category.name
@@ -101,6 +126,6 @@ class OvertimeReport(models.AbstractModel):
 #                 })
         
         return {
-            'uniq_category_list': uniq_category_list,
+            'my_list': my_list,
             'docs': docs,
         }
