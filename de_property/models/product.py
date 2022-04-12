@@ -25,12 +25,7 @@ class ProductTemplate(models.Model):
     
 
     def action_generate_booking(self):
-        partner=self.partner_id.id
-        booking_validity = self.booking_validity
-        date_validity = self.date_validity
-        product_list = []
         for rec in self:
-            product_list.append(rec.id)
             if rec.booking_id:
                 raise UserError(_('Selected Plot are already Booked!'))
             selected_ids = rec.env.context.get('active_ids', [])
@@ -43,10 +38,10 @@ class ProductTemplate(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_product_ids': product_list,
-                        'default_partner_id': partner,
-                        'default_date_reservation': booking_validity,
-                        'default_date_validity': date_validity,
+            'context': {'default_product_ids': selected_records.ids,
+                        'default_partner_id': self.partner_id.id,
+                        'default_date_reservation': self.booking_validity,
+                        'default_date_validity': self.date_validity,
                        },
         }
     

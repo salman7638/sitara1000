@@ -68,7 +68,10 @@
                   <field name="binding_model_id" ref="product.model_product_product"/>            
                   <field name="binding_view_types">list</field>
                   <field name="state">code</field>
-                  <field name="code">action = records.action_generate_booking() </field>
+                  <field name="code">
+                         for rec in records: 
+                             action = rec.action_generate_booking() 
+                  </field>
       </record>  
             
   </data>
