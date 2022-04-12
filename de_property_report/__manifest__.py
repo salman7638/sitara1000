@@ -37,6 +37,8 @@
         'report/plot_pdf_status_report.xml',
         'report/plot_detail_report.xml',
         'report/advance_receivable_report.xml',
+        'report/partner_ledger_report.xml',
+        'wizard/partner_ledger_wizard.xml',
         'report/booking_report.xml',
         'report/booking_template.xml',
         'report/allotment_report.xml',
