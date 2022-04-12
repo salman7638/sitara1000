@@ -5,6 +5,8 @@
                     <div class="article o_report_layout_standard" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id">
                         <div class="page">
                             <div style="font-size:10px" class="col-12">
+                            
+
                                 <table style="border: 1px solid black;">
                                     <thead>
                                         <th style="border: 1px solid black;" width="50">Phase</th>
@@ -25,7 +27,6 @@
                                     <tbody>
                                         <tr t-foreach="my_list" t-as="plo">
                                             <td style="border: 1px solid black;">
-                                                
                                                     <span t-esc="plo['plot_phase']"/>
                                                 
                                             </td>
@@ -44,7 +45,7 @@
                                                 <span t-esc="'{0:.2f}'.format(float(plo['available_total_number_of_plots']))"/>
                                             </td>
                                             <td style="border: 1px solid black;">
-                                                <span t-esc="'{0:.2f}'.format(float(plo['available_total_number_of_marlas']))"/>
+                                                <span t-esc="'{0:.2f}'.format(int(plo['available_total_number_of_marlas']))"/>
                                             </td>
                                             <td style="border: 1px solid black;">
                                                 <span t-esc="'{0:.2f}'.format(float(plo['unconfirm_total_number_of_plots']))"/>
@@ -71,21 +72,14 @@
                                             <td style="border: 1px solid black;">
                                                 <span t-esc="'{0:.2f}'.format(float(plo['sold_total_number_of_marlas']))"/>
                                             </td>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
                                         </tr>
+                                    <tr t-foreach="my_list" t-as="plo">
+                                        <td style="border: 1px solid black;">
+                                                <span t-esc="'{0:.2f}'.format(float(plo['grand_total_number_of_plots']))"/>
+                                            </td>
+                            
+                                        </tr>
+                                      
                                         
                                     </tbody>
                                 </table>

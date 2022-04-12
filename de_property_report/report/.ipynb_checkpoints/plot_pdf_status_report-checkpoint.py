@@ -58,10 +58,10 @@ class OvertimeReport(models.AbstractModel):
                 booked_total_number_of_marlas = sold_total_number_of_plots = sold_total_number_of_marlas = 0 
                 
                 plot_category = self.env['product.category'].search([('id','=', categ)], limit=1)
-                phase_plots = self.env['product.product'].search([('categ_id','=', plot_category.id),('property_location_id.location_id','=',plot_phase.id)] )
+                phase_plots = self.env['product.product'].search([('categ_id','=', categ),('property_location_id.location_id','=',plot_phase.id)] )
                 
                 for pl in phase_plots:
-                    
+
                     total_number_of_plots += 1
                     total_number_of_marlas += pl.plot_area_marla
                     if pl.state=='available':
@@ -79,9 +79,10 @@ class OvertimeReport(models.AbstractModel):
                     if pl.state in ('un_posted_sold','posted_sold'):
                         sold_total_number_of_plots += 1
                         sold_total_number_of_marlas += pl.plot_area_marla 
-                
+
                 mydict['plot_category'] = plot_category.name
                 mydict['total_number_of_plots'] = total_number_of_plots
+                
                 mydict['total_number_of_marlas'] = total_number_of_marlas
                 mydict['available_total_number_of_plots'] = available_total_number_of_plots
                 mydict['available_total_number_of_marlas'] = available_total_number_of_marlas
@@ -93,28 +94,31 @@ class OvertimeReport(models.AbstractModel):
                 mydict['booked_total_number_of_marlas'] = booked_total_number_of_marlas
                 mydict['sold_total_number_of_plots'] = sold_total_number_of_plots
                 mydict['sold_total_number_of_marlas'] = sold_total_number_of_marlas
-      
-                
-                
-                
-
-                
-                
-                
-                
-                
-                
-
-                
-                
-                
-                
-                
-
-                
-
 
                 my_list.append(mydict)
+
+#             grand_total_number_of_plots += total_number_of_plots
+
+#             mydict['grand_total_number_of_plots'] = grand_total_number_of_plots 
+            
+#             my_list.append(mydict)
+                
+                
+                
+                
+                
+                
+
+                
+                
+                
+                
+                
+
+                
+
+
+                
             
             
 #             last_list.append(my_list)
