@@ -73,6 +73,8 @@ class PlotDetailXlS(models.AbstractModel):
         col_no += 1  
         if docs.type!='available': 
             sheet.write(2, col_no, 'NAME OF BUYER',header_row_style)
+            col_no += 1 
+            sheet.write(2, col_no, 'CONTACT OF BUYER',header_row_style)
             col_no += 1  
         sheet.write(2, col_no, 'PLOT NO.',header_row_style)
         col_no += 1  
@@ -143,6 +145,8 @@ class PlotDetailXlS(models.AbstractModel):
             col_no += 1
             if docs.type!='available': 
                 sheet.write(row, col_no, str(plt.partner_id.name if plt.partner_id else ' '), format2)
+                col_no += 1
+                sheet.write(row, col_no, str(plt.partner_id.phone if plt.partner_id.phone else ' '), format2)
                 col_no += 1
             sheet.write(row, col_no, str(plt.name), format2)
             col_no += 1
