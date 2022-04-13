@@ -34,7 +34,7 @@
         'wizard/advance_receivable_wizard.xml',
         'report/plot_detail_report.xml',
         'report/plot_status_report.xml',
-        'report/plot_pdf_status_report.xml',
+#         'report/plot_pdf_status_report.xml',
         'report/plot_detail_report.xml',
         'report/advance_receivable_report.xml',
         'report/partner_ledger_report.xml',

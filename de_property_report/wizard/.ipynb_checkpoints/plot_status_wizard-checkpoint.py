@@ -21,14 +21,14 @@ class PlotStatusWizard(models.Model):
         return self.env.ref('de_property_report.open_plot_status_report').report_action(self, data=data, config=False)
     
     
-    def pdf_report(self):
-        data = {}
-        data['form'] = self.read(['date'])[0]
-        return self._print_pdf_report(data)
+#     def pdf_report(self):
+#         data = {}
+#         data['form'] = self.read(['date'])[0]
+#         return self._print_pdf_report(data)
 
     
-    def _print_pdf_report(self, data):
-        data['form'].update(self.read(['date'])[0])
-        return self.env.ref('de_property_report.plot_status_pdf_report_data').report_action(self, data=data, config=False)
+#     def _print_pdf_report(self, data):
+#         data['form'].update(self.read(['date'])[0])
+#         return self.env.ref('de_property_report.plot_status_pdf_report_data').report_action(self, data=data, config=False)
     
     
