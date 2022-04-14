@@ -12,6 +12,7 @@ class AdvanceReceivableWizard(models.Model):
     date_to = fields.Date(string='Date To', required=True)
     type = fields.Selection([
         ('date_wise', 'Date Wise'),
+        ('date_wise_paid', 'Date Wise Paid'),
         ('month', 'Monthly'),
         ('year', 'Yearly'),
         ], string='Type', required=True, default='date_wise')
