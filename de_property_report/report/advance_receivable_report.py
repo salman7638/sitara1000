@@ -28,7 +28,13 @@ class AdvanceReceivableXlS(models.AbstractModel):
         sheet.set_column(5, 5, 20)
         sheet.set_column(6, 6, 35)
         
-        
+        if docs.type=='date_wise_paid':
+            sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
+            sheet.write('C2:D2', 'MONTHLY DATE WISE RECEIVED' ,title)
+            sheet.write('B3:B3','Date From', header_row_style)
+            sheet.write('C3:C3',docs.date_from.strftime('%d-%b-%Y'), header_row_style)
+            sheet.write('D3:D3','Date To', header_row_style)
+            sheet.write('E3:E3',docs.date_to.strftime('%d-%b-%Y'), header_row_style)
         if docs.type=='date_wise':
             sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
             sheet.write('C2:D2', 'MONTHLY DATE WISE RECEIVABLES' ,title)
@@ -108,7 +114,24 @@ class AdvanceReceivableXlS(models.AbstractModel):
                                 'remarks': installment.name ,
                             }
                             date_wise_receivables.append(line_vals)            
-                
+         
+        if  docs.type=='date_wise_paid':
+            paid_booked_plot_list = self.env['product.product'].search([('state','in',('booked','un_posted_sold')),('date_validity', '>=' , docs.date_from),('date_validity', '<=' , docs.date_to) ])
+            date_wise_receivables = []
+            for paid_book_plot in paid_booked_plot_list:
+                total_paid_amount = 0
+                for paid_payment in paid_book_plot.payment_ids:
+                    if paid_payment.date >= docs.date_from and  paid_payment.date <= docs.date_to:
+                        total_paid_amount += paid_payment.amount
+                if  total_paid_amount > 0:       
+                    paid_line_vals = {
+                        'date':  paid_payment.date ,
+                        'plot_no': paid_book_plot.name , 
+                        'amount':  total_paid_amount ,
+                        'remarks': 'Paid Amount on '+str(paid_payment.date ) ,
+                    }
+                    date_wise_receivables.append(paid_line_vals)
+            
         if  docs.type=='month':
             month_list = []
             for monthly in date_wise_receivables:
@@ -157,7 +180,7 @@ class AdvanceReceivableXlS(models.AbstractModel):
         col_no=0
         sheet.write(3,col_no,  'SR.NO', header_row_style)
         col_no += 1
-        if docs.type=='date_wise':
+        if docs.type in ('date_wise','date_wise_paid'):
             sheet.write(3,col_no , 'DATE',  header_row_style)
             col_no += 1        
             sheet.write(3,col_no , 'PLOT NO.', header_row_style)
@@ -171,7 +194,7 @@ class AdvanceReceivableXlS(models.AbstractModel):
             
         sheet.write(3,col_no , "AMOUNT",  header_row_style)
         col_no += 1
-        if docs.type=='date_wise':
+        if docs.type in ('date_wise','date_wise_paid'):
             sheet.write(3,col_no , 'REMARKS', header_row_style) 
             
         col_no = 0
@@ -182,7 +205,7 @@ class AdvanceReceivableXlS(models.AbstractModel):
         for receiv in date_wise_receivables:             
             sheet.write(row, col_no, str(sr_no), format2)
             col_no += 1
-            if docs.type=='date_wise':
+            if docs.type in ('date_wise','date_wise_paid'):
                 sheet.write(row, col_no, str(receiv['date']), format2) 
                 col_no += 1            
                 sheet.write(row, col_no, str(receiv['plot_no']), format2)
@@ -194,7 +217,7 @@ class AdvanceReceivableXlS(models.AbstractModel):
             sheet.write(row, col_no, '{0:,}'.format(int(round(receiv['amount']))), format2)
             col_no += 1
             total_amount += float(receiv['amount'])
-            if docs.type=='date_wise':
+            if docs.type in ('date_wise','date_wise_paid'):
                 sheet.write(row, col_no, str(receiv['remarks']), format2)                
             col_no = 0
             row += 1
@@ -204,12 +227,12 @@ class AdvanceReceivableXlS(models.AbstractModel):
         col_no += 1
         sheet.write(row, col_no, str(), header_row_style) 
         col_no += 1
-        if docs.type=='date_wise':
+        if docs.type in ('date_wise','date_wise_paid'):
             sheet.write(row, col_no, str(), header_row_style)
             col_no += 1
         sheet.write(row, col_no, str('{0:,}'.format(int(round(total_amount)))), header_row_style)
         col_no += 1
-        if docs.type=='date_wise':
+        if docs.type in ('date_wise','date_wise_paid'):
             sheet.write(row, col_no, str(), header_row_style) 
         col_no = 0
         row += 1
