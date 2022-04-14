@@ -103,6 +103,11 @@ class SaleOrder(models.Model):
                     pay_line.update({
                         'order_id': line.id,
                     })
+                    pay_line.batch_payment_id.update({
+                        'order_id': line.id,
+                    })
+                    
+                    
             payments = self.env['account.payment'].search([('order_id','=',line.id),('state','in',('draft','posted'))])
             for pay in payments:
                 if pay.type!='fee':
