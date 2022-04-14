@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 
 class PartnerLedgerXlS(models.AbstractModel):
-    _name = 'report.de_property_report.ledger_report_xlx'
+    _name = 'report.de_ledger_sale_report.ledger_report_xlx'
     _description = 'Partner Ledger report'
     _inherit = 'report.report_xlsx.abstract'
     

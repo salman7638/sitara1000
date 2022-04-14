@@ -17,7 +17,7 @@
 
 <odoo>
      <report id="open_partner_ledger_report"
-            model="report.de_property_report.ledger_report_xlx"
+            model="report.de_ledger_sale_report.ledger_report_xlx"
             string="Partner Ledger Report"
             report_type="xlsx"
             name="de_ledger_sale_report.ledger_report_xlx"
