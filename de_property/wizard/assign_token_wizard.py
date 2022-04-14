@@ -23,6 +23,7 @@ class AssignTokenWizard(models.TransientModel):
         total_plot = 0
         for order_count in self.product_ids:
             total_plot += 1 
+        batch_payment_list = []    
         for line in self.product_ids:
             vals = {
                 'partner_id': self.partner_id.id,
@@ -34,7 +35,8 @@ class AssignTokenWizard(models.TransientModel):
                 'payment_type': 'inbound' ,
                 }
             record = self.env['account.payment'].sudo().create(vals) 
-            record.action_post()      
+            record.action_post()
+            batch_payment_list.append(record.id)
             line.update({
                 'payment_ids':  record.ids,
                 'state': 'reserved',
@@ -48,4 +50,14 @@ class AssignTokenWizard(models.TransientModel):
                 'cnic': self.partner_id.nic,    
                 })    
         
-        
+        batch_vals = {
+            'batch_type': 'inbound',
+            'journal_id': self.journal_id.id,
+            'date': self.date,
+            'state': 'reconciled',
+        } 
+        batch=self.env['account.batch.payment'].create(batch_vals)
+        batch.payment_ids=batch_payment_list
+        batch.update({
+           'state': 'reconciled',
+        })

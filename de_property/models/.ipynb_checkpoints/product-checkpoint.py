@@ -15,6 +15,10 @@ class ProductTemplate(models.Model):
                     'state': 'available',
                     'partner_id': False,
                     'cnic': '',
+                    'booking_validity': False,
+                    'date_validity': False,
+                    'date_reservation': False,
+                    
                 })
                 if line.payment_ids:
                     for pay in line.payment_ids:
