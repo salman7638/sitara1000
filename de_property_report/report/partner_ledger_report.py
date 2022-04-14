@@ -13,47 +13,50 @@ class PartnerLedgerXlS(models.AbstractModel):
     def generate_xlsx_report(self, workbook, data, lines):
         docs = self.env['partner.ledger.wizard'].browse(self.env.context.get('active_id'))
         sheet = workbook.add_worksheet('Partner Ledger Report')
-        bold = workbook. add_format({'bold': True, 'align': 'center','bg_color': '#FFFF99','border': True})
+        bold = workbook.add_format({'bold': True, 'align': 'center','bg_color': '#FFFF99','border': True})
         title = workbook.add_format({'bold': True, 'align': 'center', 'font_size': 20, 'bg_color': '#FFFF99', 'border': True})
         header_row_style = workbook.add_format({'bold': True, 'align': 'center', 'border':True})
         format2 = workbook.add_format({'align': 'center'})
-        format3 = workbook.add_format({'align': 'center','bold': True,'border': True,})        
-#         plot_categories = []
-#         uniq_location_list = []        
+        format3 = workbook.add_format({'align': 'center','bold': True,'border': True,})    
         
         
-        sheet.set_column(1, 1, 40)
-        sheet.set_column(2, 2, 30)
-        sheet.set_column(3, 3, 30)
-        sheet.set_column(4, 4, 30)
-        sheet.set_column(5, 5, 30)
+        sheet.set_column(0, 0, 30)
+        sheet.set_column(1, 1, 25)
+        sheet.set_column(2, 2, 25)
+        sheet.set_column(3, 3, 25)
+        sheet.set_column(4, 4, 25)
+        sheet.set_column(5, 5, 25)
         
             
         
-        sheet.write(2,1, 'Partner', header_row_style)
-        sheet.write(2,2 , 'Debit', header_row_style)
-        sheet.write(2,3 , "Credit", header_row_style)
-        sheet.write(2,4 , "Balance", header_row_style)
+        sheet.write(2, 0, 'Partner', header_row_style)
+        sheet.write(2, 1, 'CNIC', header_row_style)
+        sheet.write(2, 2, 'Debit', header_row_style)
+        sheet.write(2, 3, "Credit", header_row_style)
+        sheet.write(2, 4, "Balance", header_row_style)
         row = 3
         
         
-        all_partners = self.env['res.partner'].search([])
-        for partner in all_partners:
+        
+        all_partners = []
+        partner_ledger = self.env['account.move.line'].search([('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2))])
+        for uniq_line in partner_ledger:
+            all_partners.append(uniq_line.partner_id.id)   
+        uniq_partner_ledger = set(all_partners)  
+        
+        for line in uniq_partner_ledger:
+            journal_items = self.env['account.move.line'].search([('partner_id','=',line),('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2))])
             total_debit = total_credit = total_balnce = 0
-            partner_ledger = self.env['account.move.line'].search([('partner_id','=',partner.id),('date','>=',docs.date_from),('date_maturity','<=',docs.date_to)])
-            
-
-            
-            for linessssss in partner_ledger:
-                total_debit += linessssss.debit
-                total_credit += linessssss.credit
+            for jv in journal_items:
+                total_debit += jv.debit
+                total_credit += jv.credit
                 total_balnce = total_debit - total_credit
-                
-                sheet.write(row, 1, linessssss.partner_id.name, format2)
-                sheet.write(row, 2, total_debit, format2)
-                sheet.write(row, 3, total_credit, format2)
-                sheet.write(row, 4, total_balnce, format2)
-            
+            psrtner = self.env['res.partner'].search([('id','=',line)], limit=1)    
+            sheet.write(row, 0, psrtner.name, format2)
+            sheet.write(row, 1, psrtner.nic, format2)
+            sheet.write(row, 2, total_debit, format2)
+            sheet.write(row, 3, total_credit, format2)
+            sheet.write(row, 4, total_balnce, format2)
             row += 1
                 
     
