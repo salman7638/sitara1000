@@ -18,7 +18,7 @@
 <odoo>
      <report id="open_plot_status_report"
             model="report.de_ledger_sale_report.status_report_xlx"
-            string="Plot Status Report"
+            string="Property Sale Report"
             report_type="xlsx"
             name="de_ledger_sale_report.status_report_xlx"
             file="de_ledger_sale_report.status_report_xlx"
