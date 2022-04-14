@@ -20,13 +20,18 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','sale','de_sale_booking','de_property_payments','de_property','report_xlsx'],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'report/property_sale_report.xml',
+        'report/partner_ledger_report.xml',
+        'wizard/partner_ledger_wizard.xml',
+        'wizard/property_sale_wizard.xml',
         'views/views.xml',
         'views/templates.xml',
+        'views/product_category_views.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
