@@ -3,3 +3,4 @@ access_advance_receivable_wizard,access.advance.receivable.wizard,model_advance_
 access_plot_status_wizard,access.plot.status.wizard,model_plot_status_wizard,,1,1,1,1
 access_plot_detail_wizard,access.plot.detail.wizard,model_plot_detail_wizard,,1,1,1,1
 access_partner_ledger_wizard,access.partner.ledger.wizard,model_partner_ledger_wizard,,1,1,1,1
+access_property_sale_wizard,access.property.sale.wizard,model_property_sale_wizard,,1,1,1,1
