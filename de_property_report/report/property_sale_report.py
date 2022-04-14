@@ -105,23 +105,18 @@ class PlotStatusXlS(models.AbstractModel):
                     total_number_of_plots += 1
                     total_number_of_marlas += pl.plot_area_marla
                     total_number_of_plot_price += pl.list_price
-                    total_number_of_reserved_price += pl.list_price
-                    total_number_of_booked_price += pl.list_price
-                    total_number_of_sold_price += pl.list_price
+                   
                     if pl.state=='reserved':
                         reserve_total_number_of_plots += 1
                         reserve_total_number_of_marlas += pl.plot_area_marla
-                        total_number_of_plot_price += pl.list_price
                         total_number_of_reserved_price += pl.list_price
                     if pl.state=='booked':
                         booked_total_number_of_plots += 1
                         booked_total_number_of_marlas += pl.plot_area_marla
-                        total_number_of_plot_price += pl.list_price
                         total_number_of_booked_price += pl.list_price
                     if pl.state in ('un_posted_sold','posted_sold'):
                         sold_total_number_of_plots += 1
                         sold_total_number_of_marlas += pl.plot_area_marla
-                        total_number_of_plot_price += pl.list_price
                         total_number_of_sold_price += pl.list_price
                 
                 if phase_count==0:
@@ -134,6 +129,7 @@ class PlotStatusXlS(models.AbstractModel):
                 grand_total_number_of_plots += total_number_of_plots
                 sheet.write(row, 3, round(total_number_of_marlas,2), format2)
                 grand_total_number_of_marlas += total_number_of_marlas
+                
                 sheet.write(row, 4, round(total_number_of_plot_price,2), format2)
                 grand_total_number_of_plot_price += total_number_of_plot_price
                 
