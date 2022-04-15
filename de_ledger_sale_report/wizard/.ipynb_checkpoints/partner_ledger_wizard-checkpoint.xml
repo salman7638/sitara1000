@@ -10,6 +10,7 @@
                         
                        <group>
                               <field name="date_from" />
+                              <field name="state" string="Status"/>
                       </group>
                         
                       <group>
