@@ -36,10 +36,7 @@
             <field name="view_id" ref="view_property_sale_report_wizard_form"/>
         </record>
       
-       <menuitem id="menu_property_reporting" name="Reporting" parent="de_property.property_menu_root"
-             sequence="60"/>
-      
-       <menuitem id="menu_property_sale_status" name="Property Sale Report" parent="menu_property_reporting"  action='open_property_sale_wizard_action'
+       <menuitem id="menu_property_sale_status" name="Property Sale Report" parent="de_property_report.menu_property_reporting"  action='open_property_sale_wizard_action'
              sequence="11"/>
       
   </data>
