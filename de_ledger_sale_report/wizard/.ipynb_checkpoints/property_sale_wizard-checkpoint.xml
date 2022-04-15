@@ -39,7 +39,7 @@
        <menuitem id="menu_property_reporting" name="Reporting" parent="de_property.property_menu_root"
              sequence="60"/>
       
-       <menuitem id="menu_property_sale_status" name="Property sale Report" parent="menu_property_reporting"  action='open_property_sale_wizard_action'
+       <menuitem id="menu_property_sale_status" name="Property Sale Report" parent="menu_property_reporting"  action='open_property_sale_wizard_action'
              sequence="11"/>
       
   </data>

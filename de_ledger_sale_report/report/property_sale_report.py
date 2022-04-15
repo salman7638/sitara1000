@@ -105,7 +105,7 @@ class PlotStatusXlS(models.AbstractModel):
                     total_number_of_plots += 1
                     total_number_of_marlas += pl.plot_area_marla
                     total_number_of_plot_price += pl.list_price
-                   
+    
                     if pl.state=='reserved':
                         reserve_total_number_of_plots += 1
                         reserve_total_number_of_marlas += pl.plot_area_marla
