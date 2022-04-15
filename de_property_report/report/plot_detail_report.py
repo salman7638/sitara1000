@@ -73,6 +73,8 @@ class PlotDetailXlS(models.AbstractModel):
         col_no += 1  
         if docs.type!='available': 
             sheet.write(2, col_no, 'NAME OF BUYER',header_row_style)
+            col_no += 1 
+            sheet.write(2, col_no, 'CONTACT OF BUYER',header_row_style)
             col_no += 1  
         sheet.write(2, col_no, 'PLOT NO.',header_row_style)
         col_no += 1  
@@ -109,6 +111,13 @@ class PlotDetailXlS(models.AbstractModel):
         
         row = 3
         sr_no = 1
+        total_plot_area_marla=0
+        total_adv_amount_received=0
+        total_list_price=0
+        total_overdue_days = 0
+        total_overdue_days_amount = 0
+        total_amount_paid = 0
+        total_amount_residual = 0
         for plt in plots_detail:
             col_no=0
             adv_amount_received=0
@@ -137,16 +146,20 @@ class PlotDetailXlS(models.AbstractModel):
             if docs.type!='available': 
                 sheet.write(row, col_no, str(plt.partner_id.name if plt.partner_id else ' '), format2)
                 col_no += 1
+                sheet.write(row, col_no, str(plt.partner_id.phone if plt.partner_id.phone else ' '), format2)
+                col_no += 1
             sheet.write(row, col_no, str(plt.name), format2)
             col_no += 1
             sheet.write(row, col_no, str(plt.categ_id.name), format2)
             col_no += 1
             sheet.write(row, col_no, str(round(plt.plot_area_marla,2)), format2) 
+            total_plot_area_marla += plt.plot_area_marla
             col_no += 1
             if docs.type in ('reserved', 'booked', 'un_posted_sold'): 
                 sheet.write(row, col_no, '{0:,}'.format(int(round(adv_amount_received))), format2)
+                total_adv_amount_received += adv_amount_received
                 col_no += 1
-                sheet.write(row, col_no, '{0:,}'.format(int(round(amt_percent_received))), format2)
+                sheet.write(row, col_no, round(amt_percent_received,4), format2)
                 col_no += 1
             if docs.type in ('unconfirm', 'reserved'): 
                 sheet.write(row, col_no, str(plt.date_reservation), format2)
@@ -157,20 +170,80 @@ class PlotDetailXlS(models.AbstractModel):
                 sheet.write(row, col_no, str(plt.property_location_id.location_id.name), format2)
                 col_no += 1
                 sheet.write(row, col_no, '{0:,}'.format(int(round(plt.list_price))), format2)
+                total_list_price += plt.list_price
                 col_no += 1
                 sheet.write(row, col_no, '{0:,}'.format(int(round(plt.amount_paid))), format2)
+                total_amount_paid += plt.amount_paid 
                 col_no += 1
                 sheet.write(row, col_no, '{0:,}'.format(int(round(plt.amount_residual))), format2)
+                total_amount_residual += plt.amount_residual
                 col_no += 1
-                sheet.write(row, col_no, '{0:,}'.format(int(round(0))), format2)
+                overdue_days = 0
+                overdue_days_amount = 0
+                if plt.state=='reserved' and fields.date.today() > plt.booking_validity:
+                    overdue_days = (fields.date.today() - plt.booking_validity).days
+                    overdue_days_amount = plt.booking_amount - plt.amount_paid
+                if plt.state=='booked' and fields.date.today() > plt.date_validity:
+                    overdue_days = (fields.date.today() - plt.date_validity).days
+                    overdue_days_amount = (plt.allottment_amount + plt.booking_amount) - plt.amount_paid                     
+                if plt.booking_id.state=='sale':
+                    for installment in plt.booking_id.installment_line_ids:
+                        if fields.date.today() > installment.date and installment.remarks != 'Paid':
+                            overdue_days = (fields.date.today() - installment.date).days
+                            overdue_days_amount = installment.amount_residual - installment.amount_paid     
+                    
+                sheet.write(row, col_no, '{0:,}'.format(int(round(overdue_days_amount))), format2)
+                total_overdue_days_amount +=  overdue_days_amount
+                col_no += 1
+                sheet.write(row, col_no, '{0:,}'.format(int(round(overdue_days))), format2)
+                total_overdue_days += overdue_days
                 col_no += 1
             if docs.type !='posted_sold':
                 sheet.write(row, col_no, str(plt.property_location_id.location_id.name), format2)
                 col_no += 0
                 
-            col_no =0 
+            col_no =1
             sr_no += 1
-            row += 1    
+            row += 1
+            
+        sheet.write(row, col_no, str(), header_row_style)
+        col_no += 1
+        if docs.type!='available': 
+            sheet.write(row, col_no, str(), header_row_style)
+            col_no += 1
+        sheet.write(row, col_no, str(), header_row_style)
+        col_no += 1
+        sheet.write(row, col_no, str(), header_row_style)
+        col_no += 1
+        sheet.write(row, col_no, str(round(total_plot_area_marla,2)), header_row_style) 
+        col_no += 1
+        if docs.type in ('reserved', 'booked', 'un_posted_sold'): 
+            sheet.write(row, col_no, '{0:,}'.format(int(round(total_adv_amount_received))), header_row_style)
+            col_no += 1
+            sheet.write(row, col_no, str(), header_row_style)
+            col_no += 1
+        if docs.type in ('unconfirm', 'reserved'): 
+            sheet.write(row, col_no, str(), header_row_style)
+            col_no += 1
+            sheet.write(row, col_no, str(), header_row_style)
+            col_no += 1
+        if docs.type =='posted_sold':
+            sheet.write(row, col_no, str(), header_row_style)
+            col_no += 1
+            sheet.write(row, col_no, '{0:,}'.format(int(round(total_list_price))), header_row_style)
+            col_no += 1
+            sheet.write(row, col_no, '{0:,}'.format(int(round(total_amount_paid))), header_row_style)
+            col_no += 1
+            sheet.write(row, col_no, '{0:,}'.format(int(round(total_amount_residual))), header_row_style)
+            col_no += 1
+            sheet.write(row, col_no, '{0:,}'.format(int(round(total_overdue_days_amount))), header_row_style)
+            col_no += 1
+            sheet.write(row, col_no, '{0:,}'.format(int(round(total_overdue_days))), header_row_style)
+            col_no += 1
+        if docs.type !='posted_sold':
+            sheet.write(row, col_no, str(), header_row_style)
+            col_no += 0    
+            
                 
                 
             
