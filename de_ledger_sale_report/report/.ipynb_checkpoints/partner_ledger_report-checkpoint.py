@@ -39,13 +39,19 @@ class PartnerLedgerXlS(models.AbstractModel):
         
         
         all_partners = []
-        partner_ledger = self.env['account.move.line'].search([('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2))])
+        partner_ledger = self.env['account.move.line'].search([('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2)),('move_id.state','!=','cancel')])
+        if docs.state== 'all':
+            partner_ledger = self.env['account.move.line'].search([('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2)),('move_id.state','!=','cancel')])
+        if docs.state== 'draft':
+            partner_ledger = self.env['account.move.line'].search([('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2)),('move_id.state','=','draft')])
+        if docs.state== 'posted':
+            partner_ledger = self.env['account.move.line'].search([('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2)),('move_id.state','=','posted')])
         for uniq_line in partner_ledger:
             all_partners.append(uniq_line.partner_id.id)   
         uniq_partner_ledger = set(all_partners)  
         
         for line in uniq_partner_ledger:
-            journal_items = self.env['account.move.line'].search([('partner_id','=',line),('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2))])
+            journal_items = self.env['account.move.line'].search([('partner_id','=',line),('date','>=',docs.date_from),('date','<=',docs.date_to),('account_id.user_type_id','=',(1,2)),('move_id.state','!=','cancel')])
             total_debit = total_credit = total_balnce = 0
             for jv in journal_items:
                 total_debit += jv.debit
