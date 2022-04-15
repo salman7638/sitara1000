@@ -37,7 +37,7 @@
         </record>
       
      
-       <menuitem id="menu_partner_ledger" name="Partner Ledger Report" parent="menu_property_reporting"
+       <menuitem id="menu_partner_ledger" name="Partner Ledger Report" parent="de_property_report.menu_property_reporting"
             action='open_partner_ledger_wizard_action'  sequence="19"/>
       
   </data>
