@@ -180,14 +180,14 @@ class PlotDetailXlS(models.AbstractModel):
                 col_no += 1
                 overdue_days = 0
                 overdue_days_amount = 0
-                
-                if plt.state=='reserved' and fields.date.today() > plt.booking_validity:
-                    overdue_days = (fields.date.today() - plt.booking_validity).days
-                    overdue_days_amount = plt.booking_amount - plt.amount_paid
-                
-                if plt.state=='booked' and fields.date.today() > plt.date_validity:
-                    overdue_days = (fields.date.today() - plt.date_validity).days
-                    overdue_days_amount = (plt.allottment_amount + plt.booking_amount) - plt.amount_paid   
+                if plt.booking_validity:
+                    if plt.state=='reserved' and fields.date.today() > plt.booking_validity:
+                        overdue_days = (fields.date.today() - plt.booking_validity).days
+                        overdue_days_amount = plt.booking_amount - plt.amount_paid
+                if plt.date_validity:
+                    if plt.state=='booked' and fields.date.today() > plt.date_validity:
+                        overdue_days = (fields.date.today() - plt.date_validity).days
+                        overdue_days_amount = (plt.allottment_amount + plt.booking_amount) - plt.amount_paid   
                   
                 if plt.booking_id.state=='sale':
                     for installment in plt.booking_id.installment_line_ids:
