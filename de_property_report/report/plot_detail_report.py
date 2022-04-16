@@ -59,9 +59,9 @@ class PlotDetailXlS(models.AbstractModel):
         if docs.type=='unconfirm': 
             plots_detail = self.env['product.product'].search([('state','=','unconfirm')])    
         if docs.type=='reserved': 
-            plots_detail = self.env['product.product'].search([('state','=','reserved')]) 
+            plots_detail = self.env['product.product'].search([('state','=','reserved'),('booking_validity','!=',False)]) 
         if docs.type=='booked': 
-            plots_detail = self.env['product.product'].search([('state','=','booked')])
+            plots_detail = self.env['product.product'].search([('state','=','booked'),('date_validity','!=',False)])
         if docs.type=='un_posted_sold': 
             plots_detail = self.env['product.product'].search([('state','in', ('un_posted_sold', 'posted_sold'))])
         if docs.type=='posted_sold': 
@@ -180,12 +180,15 @@ class PlotDetailXlS(models.AbstractModel):
                 col_no += 1
                 overdue_days = 0
                 overdue_days_amount = 0
+                
                 if plt.state=='reserved' and fields.date.today() > plt.booking_validity:
                     overdue_days = (fields.date.today() - plt.booking_validity).days
                     overdue_days_amount = plt.booking_amount - plt.amount_paid
+                
                 if plt.state=='booked' and fields.date.today() > plt.date_validity:
                     overdue_days = (fields.date.today() - plt.date_validity).days
-                    overdue_days_amount = (plt.allottment_amount + plt.booking_amount) - plt.amount_paid                     
+                    overdue_days_amount = (plt.allottment_amount + plt.booking_amount) - plt.amount_paid   
+                  
                 if plt.booking_id.state=='sale':
                     for installment in plt.booking_id.installment_line_ids:
                         if fields.date.today() > installment.date and installment.remarks != 'Paid':

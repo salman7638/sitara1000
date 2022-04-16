@@ -195,7 +195,7 @@ class SaleOrder(models.Model):
     def action_confirm_booking(self):
         for line in self:
             
-            if line.amount_paid >= ((line.amount_total)/100) * 10:
+            if line.amount_paid >= ((line.amount_total)/100) * 5:
                 line.update({
                     'state': 'booked',
                 })
