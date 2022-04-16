@@ -261,7 +261,7 @@ class PlotDetailXlS(models.AbstractModel):
             col_no += 1
             sheet.write(row, col_no, str(due_date_report), header_row_style)
             col_no += 1
-            sheet.write(row, col_no, '{0:,}'.format(int(round(remarks))), header_row_style)
+            sheet.write(row, col_no, str(remarks), header_row_style)
             col_no += 1
         if docs.type !='posted_sold':
             sheet.write(row, col_no, str(), header_row_style)
