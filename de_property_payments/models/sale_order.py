@@ -141,8 +141,8 @@ class SaleOrder(models.Model):
                 'allotment_amount_residual': round(allotment_amount if allotment_amount > 0 else 0),
                 'installment_amount_residual':(installment_amount if installment_amount > 0 else 0), 
             })
-            if line.amount_paid >= ((line.amount_total)/100) * 10:
-                line.received_percent = 10
+            if line.amount_paid >= ((line.amount_total)/100) * 5:
+                line.received_percent = 5
                 line.action_confirm_booking()
             if line.amount_paid >= ((line.amount_total)/100) * 25:
                 line.received_percent = 25
