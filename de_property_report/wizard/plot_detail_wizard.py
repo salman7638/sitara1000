@@ -15,7 +15,7 @@ class PlotDetailWizard(models.Model):
             ('reserved', 'Reserved Plots'),
             ('booked', 'Booked Plots'),
             ('un_posted_sold', 'Sold Plots'),
-            ('posted_sold', 'Plots Payments Detail'),   
+            ('posted_sold', 'Payments Overdue Detail'),   
         ], string='Type', required=True, default='date_wise')
     
    
