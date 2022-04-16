@@ -128,7 +128,7 @@ class PlotDetailXlS(models.AbstractModel):
             amt_percent_received=0
             for amt_receive in plt.payment_ids:
                 adv_amount_received += amt_receive.amount
-            amt_percent_received =  (adv_amount_received/plt.list_price) * 100 
+            amt_percent_received =  (adv_amount_received/plt.list_price if plt.list_price>0 else 1) * 100 
             sheet.write(row, col_no, str(sr_no), format2)
             col_no += 1 
             plot_status=''
