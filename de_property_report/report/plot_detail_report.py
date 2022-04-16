@@ -52,7 +52,9 @@ class PlotDetailXlS(models.AbstractModel):
         sheet.set_column(10, 10, 20)   
         sheet.set_column(11, 11, 20)   
         sheet.set_column(12, 12, 20)   
-        sheet.set_column(13, 13, 20)   
+        sheet.set_column(13, 13, 20) 
+        sheet.set_column(14, 14, 20) 
+        sheet.set_column(15, 15, 20)   
         plots_detail = self.env['product.product'].search([]) 
         if docs.type=='available': 
             plots_detail = self.env['product.product'].search([('state','=','available')])
@@ -213,6 +215,10 @@ class PlotDetailXlS(models.AbstractModel):
                 sheet.write(row, col_no, '{0:,}'.format(int(round(overdue_days))), format2)
                 total_overdue_days += overdue_days
                 col_no += 1
+                sheet.write(row, col_no, str(due_date_report), format2)
+                col_no += 1
+                sheet.write(row, col_no, str(remarks), format2)
+                col_no += 1 
             if docs.type !='posted_sold':
                 sheet.write(row, col_no, str(plt.property_location_id.location_id.name), format2)
                 col_no += 0
@@ -258,10 +264,6 @@ class PlotDetailXlS(models.AbstractModel):
             sheet.write(row, col_no, '{0:,}'.format(int(round(total_overdue_days_amount))), header_row_style)
             col_no += 1
             sheet.write(row, col_no, '{0:,}'.format(int(round(total_overdue_days))), header_row_style)
-            col_no += 1
-            sheet.write(row, col_no, str(due_date_report), header_row_style)
-            col_no += 1
-            sheet.write(row, col_no, str(remarks), header_row_style)
             col_no += 1
         if docs.type !='posted_sold':
             sheet.write(row, col_no, str(), header_row_style)
