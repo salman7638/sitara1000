@@ -61,10 +61,10 @@ class SaleOrder(models.Model):
         self.batch_bill_count = count
         
     batch_bill_count = fields.Integer(string='Payments', compute='get_batch_bill_count')
-    amount_paid = fields.Float(string='Total Amount Paid', compute='_compute_property_amount')
-    booking_amount_residual = fields.Float(string='Booking Amount Due')
-    allotment_amount_residual = fields.Float(string='Allotment Amount Due')
-    installment_amount_residual = fields.Float(string='Installment Amount Due')
+    amount_paid = fields.Float(string='Amount Paid', compute='_compute_property_amount')
+    booking_amount_residual = fields.Float(string='Booking Due')
+    allotment_amount_residual = fields.Float(string='Allotment Due')
+    installment_amount_residual = fields.Float(string='Installment Due')
     amount_residual = fields.Float(string='Amount Due')
     received_percent = fields.Float(string='Percentage')
     state = fields.Selection([
