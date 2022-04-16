@@ -211,9 +211,9 @@ class PlotDetailXlS(models.AbstractModel):
             
         sheet.write(row, col_no, str(), header_row_style)
         col_no += 1
-        if docs.type!='available': 
-            sheet.write(row, col_no, str(), header_row_style)
-            col_no += 1
+        #if docs.type!='available': 
+        sheet.write(row, col_no, str(), header_row_style)
+        col_no += 1
         sheet.write(row, col_no, str(), header_row_style)
         col_no += 1
         sheet.write(row, col_no, str(), header_row_style)
