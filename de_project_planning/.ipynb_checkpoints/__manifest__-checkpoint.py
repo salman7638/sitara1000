@@ -20,7 +20,7 @@
     'category': 'project',
     'version': '14.0.1.6',
 
-    'depends': ['base', 'mail', 'note','project','stock','account','hr_timesheet','purchase_requisition_stock'],
+    'depends': ['base', 'mail', 'note','project','stock','account','hr_timesheet','purchase_requisition_stock','account_budget'],
 
     # always loaded
     'data': [
