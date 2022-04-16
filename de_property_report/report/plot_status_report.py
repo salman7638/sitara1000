@@ -40,7 +40,9 @@ class PlotStatusXlS(models.AbstractModel):
         sheet.set_column(10, 10, 20)   
         sheet.set_column(11, 11, 20)   
         sheet.set_column(12, 12, 20)   
-        sheet.set_column(13, 13, 20)   
+        sheet.set_column(13, 13, 20)
+        sheet.set_column(12, 14, 20)   
+        sheet.set_column(13, 15, 20)     
         sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
         sheet.write('C2:D2', 'PLOTS STATUS DETAIL' ,title)
         sheet.write('E2:E2',  str(docs.date.strftime('%d-%b-%Y')) ,header_row_style)
@@ -165,7 +167,7 @@ class PlotStatusXlS(models.AbstractModel):
                 sheet.write(row, 13, round(all_sold_total_number_of_marlas,2), format2)
                 grand_all_sold_total_number_of_marlas += all_sold_total_number_of_marlas
                 sheet.write(row, 14, '{0:,}'.format(int(round(all_sold_total_number_of_plots))), format2)
-                grand_sold_total_number_of_plots += sold_total_number_of_plots
+                grand_all_sold_total_number_of_plots += sold_total_number_of_plots
                 sheet.write(row, 15, round(all_sold_total_number_of_marlas,2), format2)
                 grand_all_sold_total_number_of_marlas += all_sold_total_number_of_marlas
                 row += 1
@@ -218,7 +220,7 @@ class PlotStatusXlS(models.AbstractModel):
             sheet.write(row, 10, '{0:,}'.format(int(round(phase_grand_booked_total_number_of_plots))), header_row_style)
             sheet.write(row, 11, round(phase_grand_booked_total_number_of_marlas,2), header_row_style)
             sheet.write(row, 12, '{0:,}'.format(int(round(phase_grand_sold_total_number_of_plots))), header_row_style)
-            sheet.write(row, 13, round(phase_grand_sold_total_number_of_marlas,2), header_row_style)
+            sheet.write(row, 13, round(phase_grand_all_sold_total_number_of_marlas,2), header_row_style)
             sheet.write(row, 14, '{0:,}'.format(int(round(phase_grand_all_sold_total_number_of_plots))), header_row_style)
             sheet.write(row, 15, round(phase_grand_all_sold_total_number_of_marlas,2), header_row_style)
             row += 1    
