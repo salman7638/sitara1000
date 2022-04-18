@@ -8,11 +8,11 @@
 		<field name="arch" type="xml">
             
 			<xpath expr="//field[@name = 'state']" position="before">
-                <field name="amount_paid"  string='Total Amount Paid'/>
-                <field name="amount_residual" string='Total Amount Due' readonly='1'/>
+                <field name="amount_paid"  string='Amount Paid'/>
+                <field name="amount_residual" string='Amount Due' readonly='1'/>
                 <field name="booking_amount_residual"  readonly='1' />
                 <field name="allotment_amount_residual"  readonly='1' />
-                <field name="installment_amount_residual"  string='Installment Amount Due' readonly='1' />
+                <field name="installment_amount_residual"  string='Installment Due' readonly='1' />
 			</xpath>
             
 		</field>

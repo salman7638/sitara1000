@@ -61,10 +61,10 @@ class SaleOrder(models.Model):
         self.batch_bill_count = count
         
     batch_bill_count = fields.Integer(string='Payments', compute='get_batch_bill_count')
-    amount_paid = fields.Float(string='Total Amount Paid', compute='_compute_property_amount')
-    booking_amount_residual = fields.Float(string='Booking Amount Due')
-    allotment_amount_residual = fields.Float(string='Allotment Amount Due')
-    installment_amount_residual = fields.Float(string='Installment Amount Due')
+    amount_paid = fields.Float(string='Amount Paid', compute='_compute_property_amount')
+    booking_amount_residual = fields.Float(string='Booking Due')
+    allotment_amount_residual = fields.Float(string='Allotment Due')
+    installment_amount_residual = fields.Float(string='Installment Due')
     amount_residual = fields.Float(string='Amount Due')
     received_percent = fields.Float(string='Percentage')
     state = fields.Selection([
@@ -141,8 +141,8 @@ class SaleOrder(models.Model):
                 'allotment_amount_residual': round(allotment_amount if allotment_amount > 0 else 0),
                 'installment_amount_residual':(installment_amount if installment_amount > 0 else 0), 
             })
-            if line.amount_paid >= ((line.amount_total)/100) * 10:
-                line.received_percent = 10
+            if line.amount_paid >= ((line.amount_total)/100) * 5:
+                line.received_percent = 5
                 line.action_confirm_booking()
             if line.amount_paid >= ((line.amount_total)/100) * 25:
                 line.received_percent = 25
@@ -195,7 +195,7 @@ class SaleOrder(models.Model):
     def action_confirm_booking(self):
         for line in self:
             
-            if line.amount_paid >= ((line.amount_total)/100) * 10:
+            if line.amount_paid >= ((line.amount_total)/100) * 5:
                 line.update({
                     'state': 'booked',
                 })
