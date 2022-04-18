@@ -45,7 +45,7 @@ class ProductTemplate(models.Model):
             'context': {'default_product_ids': selected_records.ids,
                         'default_partner_id': self.partner_id.id,
                         'default_date_reservation': self.booking_validity,
-                        'default_date_validity': self.date_validity,
+                       
                        },
         }
     
@@ -111,6 +111,7 @@ class ProductTemplate(models.Model):
     installment_amount = fields.Float(string='Installment Amount')
     partner_id = fields.Many2one('res.partner', string='Dealer/Customer')
     cnic = fields.Char(string='CNIC')
+    phone = fields.Char(string='Phone')
     booking_id = fields.Many2one('sale.order', string='Booking')
     partner_role = fields.Char( string='Role')
     state = fields.Selection(selection=[
@@ -129,6 +130,7 @@ class ProductTemplate(models.Model):
     date_reservation = fields.Date(string='Date of Reservation')
     booking_validity = fields.Date(string='Booking Validity')
     date_validity = fields.Date(string='Date Validity')
+    token_validity = fields.Date(string='Token Validity') 
     
     
     
@@ -153,6 +155,8 @@ class ProductTemplate(models.Model):
                 amount_residual=0
             line.amount_paid = amount_paid
             line.amount_residual = amount_residual
+            line.cnic = line.partner_id.nic
+            line.phone = line.partner_id.phone
 
     
 
@@ -177,8 +181,8 @@ class ProductTemplate(models.Model):
                 line.list_price = round(total_amount + (line.property_amenities_id.percent * (total_amount / 100)))
             else:
                 line.list_price=0
-            line.booking_amount= round(((line.list_price-line.discount_amount)/100)*10) 
-            line.allottment_amount= round(((line.list_price-line.discount_amount)/100)*15)
+            line.booking_amount= round(((((line.list_price-line.discount_amount)/100)*10) + line.categ_id.process_fee))
+            line.allottment_amount= round(((((line.list_price-line.discount_amount)/100)*15) + line.categ_id.allottment_fee)) 
             line.installment_amount=round(((line.list_price-line.discount_amount)/100)*75)
             
     can_be_property = fields.Boolean(string="Can be Property", compute='_compute_can_be_property',
