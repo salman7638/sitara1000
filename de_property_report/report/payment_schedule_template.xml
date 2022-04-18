@@ -67,7 +67,7 @@
                     </tr>
                         <tr>
                         <td >RATE(MARLA)         :</td>
-                        <td style='text-align:left;'><span t-esc='round(line.rate_area_marla,2)'/></td>
+                        <td style='text-align:left;'><span t-esc='round(float(line.rate_area_marla),2)'/></td>
                     </tr>
                     </t>
             </table>
@@ -100,7 +100,7 @@
                         <tr>
                             <td ><span t-field="line.name"/></td>
                             <td ><span t-field="'{0:,}'.format(int(round(line.total_amount)))"/></td>
-                            <td ><span t-field="'{0:,}'.format(int(line.amount_paid))"/></td>
+                            <td ><span t-field="'{0:,}'.format(int(round(line.amount_paid)))"/></td>
                              
                            </tr> 
                          </t>
@@ -193,7 +193,7 @@
                     </tr>
                         <tr>
                         <td >RATE(MARLA)         :</td>
-                        <td style='text-align:left;'><span t-esc='round(line.rate_area_marla,2)'/></td>
+                        <td style='text-align:left;'><span t-esc='round(float(line.rate_area_marla),2)'/></td>
                     </tr>
                     </t>
             </table>
@@ -225,8 +225,8 @@
                       <t t-foreach="docs.installment_line_ids" t-as="line">
                         <tr>
                             <td ><span t-field="line.name"/></td>
-                            <td ><span t-field="'{0:,}'.format(int(line.total_amount))"/></td>
-                            <td ><span t-field="'{0:,}'.format(int(line.amount_paid))"/></td>
+                            <td ><span t-field="'{0:,}'.format(int(round(line.total_amount)))"/></td>
+                            <td ><span t-field="'{0:,}'.format(int(round(line.amount_paid)))"/></td>
                              
                            </tr> 
                          </t>
