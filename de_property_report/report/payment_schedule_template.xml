@@ -3,7 +3,7 @@
   <template id="payment_schedule_office_report">
     <t t-call="web.html_container">
     <t t-call="web.external_layout">
-        <div class="page" >
+        <div class="page" style='font-size:12px;'>
             <div class="oe_structure"/>
              <div  class='pull-right' style="max-width: 250px;height: 20px; color:blue;margin:5px;">
                <strong>Printed On:</strong>
@@ -67,7 +67,7 @@
                     </tr>
                         <tr>
                         <td >RATE(MARLA)         :</td>
-                        <td style='text-align:left;'><span t-esc='line.rate_area_marla'/></td>
+                        <td style='text-align:left;'><span t-esc='round(line.rate_area_marla,2)'/></td>
                     </tr>
                     </t>
             </table>
@@ -93,14 +93,14 @@
                 <tbody class="sale_tbody">
                     <tr>
                         <td> Advance Payment</td>
-                        <td> <span t-esc="round((docs.amount_total/100)*25)"/> </td>
-                        <td> <span t-esc="round((docs.amount_total/100)*25 - docs.booking_amount_residual - docs.allotment_amount_residual)"/> </td>
+                        <td> <span t-esc="'{0:,}'.format(int(round((docs.amount_total/100)*25)))"/> </td>
+                        <td> <span t-esc="'{0:,}'.format(int(round((docs.amount_total/100)*25 - docs.booking_amount_residual - docs.allotment_amount_residual)))"/> </td>
                     </tr>
                       <t t-foreach="docs.installment_line_ids" t-as="line">
                         <tr>
                             <td ><span t-field="line.name"/></td>
-                            <td ><span t-field="line.total_amount"/></td>
-                            <td ><span t-field="line.amount_paid"/></td>
+                            <td ><span t-field="'{0:,}'.format(int(round(line.total_amount)))"/></td>
+                            <td ><span t-field="'{0:,}'.format(int(line.amount_paid))"/></td>
                              
                            </tr> 
                          </t>
@@ -138,7 +138,7 @@
     <template id="payment_schedule_customer_report">
     <t t-call="web.html_container">
     <t t-call="web.external_layout">
-        <div class="page" >
+        <div class="page" style='font-size:12px;'>
             <div class="oe_structure"/>
             <div  class='pull-right' style="max-width: 250px;height: 20px; color:blue;margin:5px;">
                <strong>Printed On:</strong>
@@ -193,7 +193,7 @@
                     </tr>
                         <tr>
                         <td >RATE(MARLA)         :</td>
-                        <td style='text-align:left;'><span t-esc='line.rate_area_marla'/></td>
+                        <td style='text-align:left;'><span t-esc='round(line.rate_area_marla,2)'/></td>
                     </tr>
                     </t>
             </table>
@@ -219,14 +219,14 @@
                 <tbody class="sale_tbody">
                     <tr>
                         <td> Advance Payment</td>
-                        <td> <span t-esc="round((docs.amount_total/100)*25)"/> </td>
-                        <td> <span t-esc="round((docs.amount_total/100)*25 - docs.booking_amount_residual - docs.allotment_amount_residual)"/> </td>
+                        <td> <span t-esc="'{0:,}'.format(int(round((docs.amount_total/100)*25)))"/> </td>
+                        <td> <span t-esc="'{0:,}'.format(int(round((docs.amount_total/100)*25 - docs.booking_amount_residual - docs.allotment_amount_residual)))"/> </td>
                     </tr>
                       <t t-foreach="docs.installment_line_ids" t-as="line">
                         <tr>
                             <td ><span t-field="line.name"/></td>
-                            <td ><span t-field="line.total_amount"/></td>
-                            <td ><span t-field="line.amount_paid"/></td>
+                            <td ><span t-field="'{0:,}'.format(int(line.total_amount))"/></td>
+                            <td ><span t-field="'{0:,}'.format(int(line.amount_paid))"/></td>
                              
                            </tr> 
                          </t>
