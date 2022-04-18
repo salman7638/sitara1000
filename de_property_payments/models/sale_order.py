@@ -134,6 +134,13 @@ class SaleOrder(models.Model):
             if line.amount_paid > advance_amount:
                 diff_advance_amt = total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - diff_advance_amt
+            total_processing_fee = 0 
+            total_membership_fee = 0
+            for order_line in line.order_line:
+                total_processing_fee += order_line.product_id.categ_id.process_fee
+                total_membership_fee += order_line.product_id.categ_id.allottment_fee
+            booking_amount += total_processing_fee
+            allotment_amount += total_membership_fee
             line.update({
                 'amount_paid':  round(total_paid_amount),
                 'amount_residual': round(residual_amount),
