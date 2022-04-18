@@ -298,6 +298,9 @@ class RegisterPayWizard(models.TransientModel):
         batch_vals = {
             'batch_type': 'inbound',
             'journal_id': self.journal_id.id,
+            'partner_id':  self.partner_id.id,
+            'check_number':  self.check_number,
+            'narration':  ' Customer Payments '+ str(self.token_amount) +' - '+ str(self.partner_id.name),  
             'order_id': self.sale_id.id,
             'date': self.date,
             'state': 'reconciled',

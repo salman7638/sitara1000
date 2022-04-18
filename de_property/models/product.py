@@ -45,7 +45,7 @@ class ProductTemplate(models.Model):
             'context': {'default_product_ids': selected_records.ids,
                         'default_partner_id': self.partner_id.id,
                         'default_date_reservation': self.booking_validity,
-                        'default_date_validity': self.date_validity,
+                       
                        },
         }
     
@@ -129,6 +129,7 @@ class ProductTemplate(models.Model):
     date_reservation = fields.Date(string='Date of Reservation')
     booking_validity = fields.Date(string='Booking Validity')
     date_validity = fields.Date(string='Date Validity')
+    token_validity = fields.Date(string='Token Validity') 
     
     
     
