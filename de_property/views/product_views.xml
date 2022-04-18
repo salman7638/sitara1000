@@ -190,6 +190,7 @@
                                         <field name="installment_amount"  readonly='1'/>
                                         <field name="partner_id" readonly='1'/>
                                         <field name="cnic" />
+                                        <field name="phone" />
                                         <field name="date_reservation"/>
                                         <field name="booking_validity"/>
                                         <field name="date_validity"/>
@@ -279,7 +280,8 @@
                     <field name="default_code" optional="hide"/>
                     
                     <field name="partner_id"/>
-                    <field name="cnic"/>
+                    <field name="cnic" optional='hide'/>
+                    <field name="phone" />
                     <field name="booking_id"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="cost_currency_id" invisible="1"/>

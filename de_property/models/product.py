@@ -111,6 +111,7 @@ class ProductTemplate(models.Model):
     installment_amount = fields.Float(string='Installment Amount')
     partner_id = fields.Many2one('res.partner', string='Dealer/Customer')
     cnic = fields.Char(string='CNIC')
+    phone = fields.Char(string='Phone')
     booking_id = fields.Many2one('sale.order', string='Booking')
     partner_role = fields.Char( string='Role')
     state = fields.Selection(selection=[
@@ -155,6 +156,7 @@ class ProductTemplate(models.Model):
             line.amount_paid = amount_paid
             line.amount_residual = amount_residual
             line.cnic = line.partner_id.nic
+            line.phone = line.partner_id.phone
 
     
 
