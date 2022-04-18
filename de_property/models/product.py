@@ -154,6 +154,7 @@ class ProductTemplate(models.Model):
                 amount_residual=0
             line.amount_paid = amount_paid
             line.amount_residual = amount_residual
+            line.cnic = line.partner_id.nic
 
     
 
