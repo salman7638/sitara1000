@@ -99,8 +99,8 @@
                       <t t-foreach="docs.installment_line_ids" t-as="line">
                         <tr>
                             <td ><span t-field="line.name"/></td>
-                            <td ><span t-field="'{0:,}'.format(int(round(line.total_amount)))"/></td>
-                            <td ><span t-field="'{0:,}'.format(int(round(line.amount_paid)))"/></td>
+                            <td ><span t-esc="'{0:,}'.format(int(round(line.total_amount)))"/></td>
+                            <td ><span t-esc="'{0:,}'.format(int(round(line.amount_paid)))"/></td>
                              
                            </tr> 
                          </t>
@@ -225,8 +225,8 @@
                       <t t-foreach="docs.installment_line_ids" t-as="line">
                         <tr>
                             <td ><span t-field="line.name"/></td>
-                            <td ><span t-field="'{0:,}'.format(int(round(line.total_amount)))"/></td>
-                            <td ><span t-field="'{0:,}'.format(int(round(line.amount_paid)))"/></td>
+                            <td ><span t-esc="'{0:,}'.format(int(round(line.total_amount)))"/></td>
+                            <td ><span t-esc="'{0:,}'.format(int(round(line.amount_paid)))"/></td>
                              
                            </tr> 
                          </t>
