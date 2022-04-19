@@ -1,0 +1,123 @@
+<odoo>
+  <data>
+      <record id="op_stock_product_type_kanban" model="ir.ui.view">
+            <field name="name">op.stock.product.type.kanban</field>
+            <field name="model">op.stock.product.type</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_stock_kanban" create="0" group_create="false">
+                    <field name="sequence"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+<!--                             <div t-if="['incoming', 'outgoing', 'internal'].indexOf(record.code.raw_value) > -1" t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}" name="stock_picking"> -->
+                                <div>
+                                    <div t-attf-class="o_kanban_card_header">
+                                        <div class="o_kanban_card_header_title">
+                                            <div class="o_primary" t-if="!selection_mode">
+                                                <a>
+                                                    <field name="name"/>
+                                                </a>
+                                            </div>
+                                            <div class="o_primary" t-if="selection_mode">
+                                                <field name="name"/>
+                                            </div>
+
+                                        </div>
+                                        <div class="o_kanban_manage_button_section" t-if="!selection_mode">
+                                            <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
+                                        </div>
+                                    </div>
+                                    <div class="container o_kanban_card_content" t-if="!selection_mode">
+                                        <div class="row">
+                                            <div class="col-6 o_kanban_primary_left">
+                                                <button class="btn btn-primary" name="get_action_op_stock_product" type="object">
+                                                    <span> To Process</span>
+<!--                                                     <span t-if="record.code.raw_value =='outgoing'"><t t-esc="record.count_picking_ready.value"/> To Process</span>
+                                                    <span t-if="record.code.raw_value =='internal'"><t t-esc="record.count_picking_ready.value"/> To Process</span> -->
+                                                </button>
+                                            </div>
+                                            <div class="col-6 o_kanban_primary_right">
+                                            </div>
+                                        </div>
+                                    </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                        <div class="row">
+                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                               
+                                            </div>
+                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_new">
+                                            </div>
+                                        </div>
+                                            
+
+                                        <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+<!--                             </div> -->
+                        </t>
+
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+       <record id="op_stock_product_type_form_view" model="ir.ui.view">
+        <field name="name">op.stock.product.type.form.view</field>
+        <field name="model">op.stock.product.type</field>
+           <field name="arch" type="xml">
+                <form string="Product  Type">
+                    <sheet string="Product Type">
+                        <div class="oe_title">
+                            <h1>
+                            <field name="name" placeholder="Product type"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="sequence"/>
+                            </group>
+                            <group></group>
+                        </group>
+                            
+                    </sheet>
+               </form>
+           </field>
+      </record>
+           
+      
+      
+      <record model="ir.ui.view" id="op_stock_product_type_tree_view">
+            <field name="name">Product Types</field>
+            <field name="model">op.stock.product.type</field>
+            <field name="arch" type="xml">
+                <tree string="Product" editable="bottom" sample="1">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+      
+      <record id="op_stock_product_type_action" model="ir.actions.act_window">
+            <field name="name">Product Type</field>
+            <field name="res_model">op.stock.product.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new Product type
+              </p>
+            </field>
+        </record>
+      
+       <menuitem name="Overview" id="project_overview_ops_main_menu" parent="de_project_planning.project_planning_root_menu" sequence="9"/>
+      <menuitem name="Product Type" 
+                id="project_product_ops_main_menu" 
+                parent="project_overview_ops_main_menu" 
+                sequence="9" 
+                action="op_stock_product_type_action"/>
+      
+      
+      
+  </data>
+</odoo>
