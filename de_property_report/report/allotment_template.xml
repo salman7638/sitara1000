@@ -8,7 +8,7 @@
              <div  class='pull-right' style="max-width: 250px;height: 20px; color:blue;margin:5px;">
                <strong>Printed On:</strong>
                <span  t-esc="datetime.datetime.strptime(str(datetime.datetime.now()+ relativedelta(hours =+ 5)), '%Y-%m-%d %H:%M:%S.%f').strftime('%d-%b-%y %H:%M %p')"/> <br/>
-               <strong>Office Copy</strong>
+               <strong>Customer Copy</strong>
             </div>
             
              <br/>
