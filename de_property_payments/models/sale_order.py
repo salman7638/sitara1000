@@ -139,8 +139,8 @@ class SaleOrder(models.Model):
             for order_line in line.order_line:
                 total_processing_fee += order_line.product_id.categ_id.process_fee
                 total_membership_fee += order_line.product_id.categ_id.allottment_fee
-            booking_amount += total_processing_fee
-            allotment_amount += total_membership_fee
+            #booking_amount += total_processing_fee
+            #allotment_amount += total_membership_fee
             line.update({
                 'amount_paid':  round(total_paid_amount),
                 'amount_residual': round(residual_amount),
