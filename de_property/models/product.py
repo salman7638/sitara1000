@@ -177,7 +177,7 @@ class ProductTemplate(models.Model):
     def _compute_sum(self):
         for line in self:
             if float(line.plot_area_marla) > 0.0 and float(line.plot_file) > 0.0:
-                total_amount = float(line.plot_area_marla) * float(line.plot_file)
+                total_amount = round(float(line.plot_area_marla),2) * round(float(line.plot_file),2)
                 line.list_price = round(total_amount + (line.property_amenities_id.percent * (total_amount / 100)))
             else:
                 line.list_price=0
