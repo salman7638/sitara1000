@@ -16,20 +16,18 @@ class saleorder(models.Model):
              self.phone = self.partner_id.phone
              self.mobile = self.partner_id.mobile
              self.Nominee_line_ids=self.partner_id.Nominee_line_ids
-
-
- @api.depends('partner_id.nic','partner_id.father_husband_name','partner_id.nationality','partner_id.passport','partner_id.ntn','partner_id.street','partner_id.phone','partner_id.mobile','partner_id.Nominee_line_ids')
+    @api.depends('partner_id.nic','partner_id.father_husband_name','partner_id.nationality','partner_id.passport','partner_id.ntn','partner_id.street','partner_id.phone','partner_id.mobile','partner_id.Nominee_line_ids')
     def _compute_partner_detail(self):
-         self.father_husband_name = self.partner_id.father_husband_name
-         self.nic = self.partner_id.nic
-         self.nationality = self.partner_id.nationality
-         self.passport = self.partner_id.passport
-         self.ntn = self.partner_id.ntn
-         self.street = self.partner_id.street
-         self.phone = self.partner_id.phone
-         self.mobile = self.partner_id.mobile
-         self.Nominee_line_ids=self.partner_id.Nominee_line_ids
-         self.mobile_num = self.partner_id.phone
+        self.father_husband_name = self.partner_id.father_husband_name
+        self.nic = self.partner_id.nic
+        self.nationality = self.partner_id.nationality
+        self.passport = self.partner_id.passport
+        self.ntn = self.partner_id.ntn
+        self.street = self.partner_id.street
+        self.phone = self.partner_id.phone
+        self.mobile = self.partner_id.mobile
+        self.Nominee_line_ids=self.partner_id.Nominee_line_ids
+        self.mobile_num = self.partner_id.phone
      
 
 
