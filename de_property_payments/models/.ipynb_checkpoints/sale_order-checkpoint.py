@@ -24,6 +24,7 @@ class SaleOrder(models.Model):
         }
     
     
+    
     def action_view_batch_payments(self):
         self.ensure_one()
         return {
@@ -61,10 +62,10 @@ class SaleOrder(models.Model):
         self.batch_bill_count = count
         
     batch_bill_count = fields.Integer(string='Payments', compute='get_batch_bill_count')
-    amount_paid = fields.Float(string='Total Amount Paid', compute='_compute_property_amount')
-    booking_amount_residual = fields.Float(string='Booking Amount Due')
-    allotment_amount_residual = fields.Float(string='Allotment Amount Due')
-    installment_amount_residual = fields.Float(string='Installment Amount Due')
+    amount_paid = fields.Float(string='Amount Paid', compute='_compute_property_amount')
+    booking_amount_residual = fields.Float(string='Booking Due')
+    allotment_amount_residual = fields.Float(string='Allotment Due')
+    installment_amount_residual = fields.Float(string='Installment Due')
     amount_residual = fields.Float(string='Amount Due')
     received_percent = fields.Float(string='Percentage')
     state = fields.Selection([
@@ -134,6 +135,13 @@ class SaleOrder(models.Model):
             if line.amount_paid > advance_amount:
                 diff_advance_amt = total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - diff_advance_amt
+            total_processing_fee = 0 
+            total_membership_fee = 0
+            for order_line in line.order_line:
+                total_processing_fee += order_line.product_id.categ_id.process_fee
+                total_membership_fee += order_line.product_id.categ_id.allottment_fee
+            #booking_amount += total_processing_fee
+            #allotment_amount += total_membership_fee
             line.update({
                 'amount_paid':  round(total_paid_amount),
                 'amount_residual': round(residual_amount),
@@ -141,8 +149,8 @@ class SaleOrder(models.Model):
                 'allotment_amount_residual': round(allotment_amount if allotment_amount > 0 else 0),
                 'installment_amount_residual':(installment_amount if installment_amount > 0 else 0), 
             })
-            if line.amount_paid >= ((line.amount_total)/100) * 10:
-                line.received_percent = 10
+            if line.amount_paid >= ((line.amount_total)/100) * 5:
+                line.received_percent = 5
                 line.action_confirm_booking()
             if line.amount_paid >= ((line.amount_total)/100) * 25:
                 line.received_percent = 25
@@ -195,7 +203,7 @@ class SaleOrder(models.Model):
     def action_confirm_booking(self):
         for line in self:
             
-            if line.amount_paid >= ((line.amount_total)/100) * 10:
+            if line.amount_paid >= ((line.amount_total)/100) * 5:
                 line.update({
                     'state': 'booked',
                 })
@@ -300,4 +308,8 @@ class PlotsReseller(models.Model):
     amount_paid = fields.Float(string='Amount Paid', required=True)
     amount_residual = fields.Float(string='Amount Due', required=True)
     order_id = fields.Many2one('sale.order', string='Order')
+    
+
+
+
     

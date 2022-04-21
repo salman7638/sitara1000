@@ -24,6 +24,7 @@ class SaleOrder(models.Model):
         }
     
     
+    
     def action_view_batch_payments(self):
         self.ensure_one()
         return {
@@ -307,4 +308,8 @@ class PlotsReseller(models.Model):
     amount_paid = fields.Float(string='Amount Paid', required=True)
     amount_residual = fields.Float(string='Amount Due', required=True)
     order_id = fields.Many2one('sale.order', string='Order')
+    
+
+
+
     

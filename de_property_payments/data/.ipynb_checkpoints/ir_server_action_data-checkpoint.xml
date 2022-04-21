@@ -1,13 +1,22 @@
 <odoo>
   <data>
-      
-         <record id="assign_reseller_server_action_form" model="ir.actions.server">
+      <record id="assign_reseller_server_action_form" model="ir.actions.server">
                   <field name="name">Reselling</field>
                   <field name="model_id" ref="sale.model_sale_order"/>
                   <field name="binding_model_id" ref="sale.model_sale_order"/>            
                   <field name="binding_view_types">form</field>
                   <field name="state">code</field>
                   <field name="code">action = records.action_resell_plots() </field>
+    </record> 
+      
+      
+    <record id="assign_reupdate_server_action_form" model="ir.actions.server">
+                  <field name="name">Plot Update</field>
+                  <field name="model_id" ref="de_property.model_product_product"/>
+                  <field name="binding_model_id" ref="de_property.model_product_product"/>            
+                  <field name="binding_view_types">form</field>
+                  <field name="state">code</field>
+                  <field name="code">action = records.action_update_plots()</field>
     </record> 
       
   </data>

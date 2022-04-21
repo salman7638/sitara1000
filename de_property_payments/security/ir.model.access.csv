@@ -4,3 +4,5 @@ access_register_pay_wizard,access.register.pay.wizard,model_register_pay_wizard,
 access_register_installment_wizard,access.register.installment.wizard,model_register_installment_wizard,,1,1,1,1
 access_plot_resell_wizard,access.plot.resell.wizard,model_plot_resell_wizard,,1,1,1,1
 access_plot_reseller_line,access.plot.reseller.line,model_plot_reseller_line,,1,1,1,1
+access_plot_update_wizard,access.plot.update.wizard,model_plot_update_wizard,,1,1,1,1
+
