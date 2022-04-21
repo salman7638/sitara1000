@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo> 
         <!--Display form view of wizard-->    
-        <record id="view_register_installment_wizard_form" model="ir.ui.view">
-            <field name="name">register.installment.wizard.form</field>
-            <field name="model">register.installment.wizard</field>
+        <record id="view_plot_resell_wizard_form" model="ir.ui.view">
+            <field name="name">plot.resell.wizard.form</field>
+            <field name="model">plot.resell.wizard</field>
             <field name="arch" type="xml">
-                <form string="Register">
+                <form string="Resell">
                     <group>
                       <group>
-                          <field name="number_of_installment" />
+                          <field name="partner_id" />
                           
+                          <field name="reseller_id"  readonly='1'/>
                       </group>
                       <group>
-                          <field name="date" />
-                          
-                          <field name="sale_id" widget='many2many_tags' invisible='1'/>                          
+                          <field name="resell_date" />
+                          <field name="sale_id"  invisible='1'/>                          
                       </group>                        
                     </group>                   
                     <footer>
@@ -26,12 +26,12 @@
         </record>
 
         <!--Open the wizard on click of menu-->
-        <record id="open_register_installment_wizard_action" model="ir.actions.act_window">
-            <field name="name">Register Installment</field>
-            <field name="res_model">register.installment.wizard</field>
+        <record id="open_plot_resell_wizard_action" model="ir.actions.act_window">
+            <field name="name">Reselling</field>
+            <field name="res_model">plot.resell.wizard</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="view_id" ref="view_register_installment_wizard_form" />
+            <field name="view_id" ref="view_plot_resell_wizard_form" />
          </record>
     
     </odoo>

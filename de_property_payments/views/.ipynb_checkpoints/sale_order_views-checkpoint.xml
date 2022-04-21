@@ -46,7 +46,7 @@
                     <header>
                       <button name="action_register_payment"  type="object" string="Register Payment" attrs="{'invisible': ['|', ('state', 'in', ['done','cancel']),('amount_residual','&lt;=', 0)]}"  class="oe_highlight" />  
                     
-                      <button name="action_generate_installment"  type="object" string="Generate Installment"  attrs="{'invisible': ['|', ('state', 'not in', ['booked','sale']),('installment_created','=',True)]}" class="oe_highlight" />
+                      <button name="action_generate_installment"  type="object" string="Generate Installment"  attrs="{'invisible': ['|', ('state', 'not in', ['draft','booked','sale']),('installment_created','=',True)]}" class="oe_highlight" />
                      <field name="state" widget="statusbar" statusbar_visible="draft,sent,booked,sale"/>
                    </header>
                 </xpath>                 
@@ -97,7 +97,19 @@
                             <field name="order_id" invisible='1' />    
                          </tree>                         
                      </field> 
-                   </page>      
+                   </page>    
+                     <page string='Resellers' >
+                      <field name="reseller_ids" attrs="{'readonly': [('state', '=', 'done')]}">
+                          <tree editable='bottom'> 
+                              <field name="partner_id" /> 
+                              <field name="date" />
+                              <field name="customer_id" />
+                              <field name="amount_paid" /> 
+                              <field name="amount_residual" /> 
+                              <field name="order_id"  invisible='1'/> 
+                          </tree>
+                      </field>    
+                   </page>    
                 </xpath>
                  
              </field>

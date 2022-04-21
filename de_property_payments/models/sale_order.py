@@ -6,6 +6,24 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
     
     
+    def action_resell_plots(self):
+        for rec in self:
+            if rec.state=='done':
+                raise UserError('Not Allow to Re-Sell Sold Plot!')
+            selected_ids = rec.env.context.get('active_ids', [])
+            selected_records = rec.env['sale.order'].browse(selected_ids)
+        return {
+            'name': ('Plot Reselling'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'plot.resell.wizard',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'default_sale_id': selected_records.id,'default_reseller_id': self.partner_id.id},
+        }
+    
+    
     def action_view_batch_payments(self):
         self.ensure_one()
         return {
@@ -43,10 +61,10 @@ class SaleOrder(models.Model):
         self.batch_bill_count = count
         
     batch_bill_count = fields.Integer(string='Payments', compute='get_batch_bill_count')
-    amount_paid = fields.Float(string='Total Amount Paid', compute='_compute_property_amount')
-    booking_amount_residual = fields.Float(string='Booking Amount Due')
-    allotment_amount_residual = fields.Float(string='Allotment Amount Due')
-    installment_amount_residual = fields.Float(string='Installment Amount Due')
+    amount_paid = fields.Float(string='Amount Paid', compute='_compute_property_amount')
+    booking_amount_residual = fields.Float(string='Booking Due')
+    allotment_amount_residual = fields.Float(string='Allotment Due')
+    installment_amount_residual = fields.Float(string='Installment Due')
     amount_residual = fields.Float(string='Amount Due')
     received_percent = fields.Float(string='Percentage')
     state = fields.Selection([
@@ -61,7 +79,7 @@ class SaleOrder(models.Model):
     membership_fee_submit = fields.Boolean(string='Membership Fee Submitted')
     installment_line_ids = fields.One2many('order.installment.line', 'order_id' , string='Installment')
     installment_created=fields.Boolean(string='Installment Generated')
-
+    reseller_ids = fields.One2many('plot.reseller.line', 'order_id', string='Resellers')
     
     @api.depends('amount_paid','amount_residual','installment_amount_residual','booking_amount_residual','allotment_amount_residual','received_percent')
     def _compute_property_amount(self):
@@ -85,6 +103,11 @@ class SaleOrder(models.Model):
                     pay_line.update({
                         'order_id': line.id,
                     })
+                    pay_line.batch_payment_id.update({
+                        'order_id': line.id,
+                    })
+                    
+                    
             payments = self.env['account.payment'].search([('order_id','=',line.id),('state','in',('draft','posted'))])
             for pay in payments:
                 if pay.type!='fee':
@@ -111,6 +134,13 @@ class SaleOrder(models.Model):
             if line.amount_paid > advance_amount:
                 diff_advance_amt = total_paid_amount - advance_amount
                 installment_amount = (((line.amount_total)/100) * 75) - diff_advance_amt
+            total_processing_fee = 0 
+            total_membership_fee = 0
+            for order_line in line.order_line:
+                total_processing_fee += order_line.product_id.categ_id.process_fee
+                total_membership_fee += order_line.product_id.categ_id.allottment_fee
+            #booking_amount += total_processing_fee
+            #allotment_amount += total_membership_fee
             line.update({
                 'amount_paid':  round(total_paid_amount),
                 'amount_residual': round(residual_amount),
@@ -118,8 +148,8 @@ class SaleOrder(models.Model):
                 'allotment_amount_residual': round(allotment_amount if allotment_amount > 0 else 0),
                 'installment_amount_residual':(installment_amount if installment_amount > 0 else 0), 
             })
-            if line.amount_paid >= ((line.amount_total)/100) * 10:
-                line.received_percent = 10
+            if line.amount_paid >= ((line.amount_total)/100) * 5:
+                line.received_percent = 5
                 line.action_confirm_booking()
             if line.amount_paid >= ((line.amount_total)/100) * 25:
                 line.received_percent = 25
@@ -171,7 +201,8 @@ class SaleOrder(models.Model):
     
     def action_confirm_booking(self):
         for line in self:
-            if line.amount_paid >= ((line.amount_total)/100) * 10:
+            
+            if line.amount_paid >= ((line.amount_total)/100) * 5:
                 line.update({
                     'state': 'booked',
                 })
@@ -189,6 +220,7 @@ class SaleOrder(models.Model):
     
     def action_register_allottment(self):
         for line in self:
+            
             if line.amount_paid >= ((line.amount_total)/100) * 25:
                 line.update({
                     'state': 'sale',
@@ -214,7 +246,7 @@ class SaleOrder(models.Model):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'default_sale_id': self.ids},
+            'context': {'default_sale_id': self.ids,'default_date': self.date_order},
         }
     
  
@@ -263,4 +295,16 @@ class OrderInstallmentLine(models.Model):
     remarks = fields.Char(string='Remarks')
     order_id = fields.Many2one('sale.order', string='Order')
     
+    
+    
+class PlotsReseller(models.Model):
+    _name = 'plot.reseller.line'
+    _descrption='Plot Reseller Lines'
+    
+    partner_id = fields.Many2one('res.partner', string='Reseller', required=True)
+    customer_id = fields.Many2one('res.partner', string='Customer', required=True)
+    date = fields.Date(string='Reselling Date', required=True)
+    amount_paid = fields.Float(string='Amount Paid', required=True)
+    amount_residual = fields.Float(string='Amount Due', required=True)
+    order_id = fields.Many2one('sale.order', string='Order')
     
