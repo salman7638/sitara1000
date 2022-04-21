@@ -24,7 +24,7 @@
     'version': '15.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','sale','de_sale_booking','de_property_payments','de_property','report_xlsx'],
+    'depends': ['base','sale','de_sale_booking','de_property_payments','de_property','report_xlsx','account'],
 
     # always loaded
     'data': [
@@ -44,6 +44,8 @@
         'report/payment_schedule_template.xml',
         'report/payment_report.xml',
         'report/payment_template.xml',
+        'report/payment_recipt_report.xml',
+        'report/payment_recipt_template.xml',
         'views/product_category_views.xml',
         
     ],
