@@ -98,7 +98,7 @@
                     
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1"/>
+                            <field name="name" readonly="1"/>consumed
                         </h1>
                     </div>
                     <group name="cost_sheet_header">
@@ -143,6 +143,7 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="price_total" sum="Total"/>
                                     <field name="qty_received" sum="Received" optional="show"/>
+                                    <field name="consumed_qty" sum="Consumed" optional="show"/>
                                     <field name="qty_to_invoice" sum="Invoiced" optional="show"/>
                                 </tree>
                             </field>

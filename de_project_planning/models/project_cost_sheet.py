@@ -178,14 +178,21 @@ class ProjectCostSheetMaterialLine(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
     date_scheduled = fields.Date(string='Scheduled Date')
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
-    qty_received = fields.Float("Received Qty", compute='_compute_qty_received', compute_sudo=True, store=True, digits='Product Unit of Measure')
+    qty_received = fields.Float("Received Qty", compute='_compute_qty_received', store=True, digits='Product Unit of Measure')
+    consumed_qty = fields.Float("Consumed Quantity", compute_sudo=True, store=True, digits='Product Unit of Measure')
     qty_to_invoice = fields.Float(compute='_compute_qty_invoiced', string='To Invoice Quantity', store=True, readonly=True, digits='Product Unit of Measure')
 
 
-    @api.depends('product_id')
+    @api.depends('product_id','project_cost_sheet_id')
     def _compute_qty_received(self):
         for line in self:
-            line.qty_received = 0.0
+            received_qty = 0.0
+            purchases=self.env['purchase.order'].search([('poject_id', '=', line.project_cost_sheet_id.project_id.id),('tast_id','=',line.project_cost_sheet_id.task_ids.id)])
+            for po_line in purchases.order_line:
+                received_qty  += po_line.qty_received
+            line.qty_received = received_qty    
+            
+                
     
     @api.depends('product_id')
     def _compute_qty_invoiced(self):
