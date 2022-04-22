@@ -177,12 +177,12 @@ class ProductTemplate(models.Model):
     def _compute_sum(self):
         for line in self:
             if float(line.plot_area_marla) > 0.0 and float(line.plot_file) > 0.0:
-                total_amount = float(line.plot_area_marla) * float(line.plot_file)
+                total_amount = round(float(line.plot_area_marla),2) * round(float(line.plot_file),2)
                 line.list_price = round(total_amount + (line.property_amenities_id.percent * (total_amount / 100)))
             else:
                 line.list_price=0
-            line.booking_amount= round(((((line.list_price-line.discount_amount)/100)*10) + line.categ_id.process_fee))
-            line.allottment_amount= round(((((line.list_price-line.discount_amount)/100)*15) + line.categ_id.allottment_fee)) 
+            line.booking_amount= round(((((line.list_price-line.discount_amount)/100)*10)))
+            line.allottment_amount= round(((((line.list_price-line.discount_amount)/100)*15))) 
             line.installment_amount=round(((line.list_price-line.discount_amount)/100)*75)
             
     can_be_property = fields.Boolean(string="Can be Property", compute='_compute_can_be_property',
