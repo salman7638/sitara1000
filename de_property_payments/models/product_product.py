@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 class ProductTemplate(models.Model):
     _inherit = 'product.product' 
     
+    
     def action_update_plots(self):
         for rec in self:
             if rec.state=='done':

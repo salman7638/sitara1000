@@ -9,7 +9,7 @@
                     <group>
                       <group>
                           <field name="plot_update_id"/>
-                          <field name="plot_id"/>
+                          <field name="plot_id" invisible="1"/>
                       </group>                     
                     </group>                   
                     <footer>
