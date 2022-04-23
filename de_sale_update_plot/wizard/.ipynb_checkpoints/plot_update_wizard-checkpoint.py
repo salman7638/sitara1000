@@ -17,17 +17,25 @@ class PlotUpdateWizard(models.TransientModel):
     
     
     def action_confirm(self):
-        self.plot_update_id.payment_ids=self.plot_id.payment_ids.ids
         
-        self.plot_id.payment_ids.unlink()
-        for o_line in self.plot_update_id.booking_id.order_line:
+        
+        self.plot_update_id.payment_ids = self.plot_id.payment_ids.ids
+        self.plot_id.payment_ids = False
+       
+        
+        
+        
+        for o_line in self.plot_id.booking_id.order_line:
             if o_line.product_id.id==self.plot_id.id:
                 o_line.update({
                     'product_id': self.plot_update_id.id,
-                    'size': self.plot_update_id.size,
-                    'unit_price': self.plot_update_id.list_price,
+#                     'size': self.plot_update_id.size,
+#                     'unit_price': self.plot_update_id.list_price,
                     
                 })
+                
+#         self.plot_id.payment_ids.unlink()
+       
         self.plot_update_id.update({
             'booking_id': self.plot_id.booking_id.id,
             'partner_id': self.plot_id.partner_id.id,
@@ -37,13 +45,10 @@ class PlotUpdateWizard(models.TransientModel):
             'token_validity': self.plot_id.token_validity,
             'cnic': self.plot_id.cnic,
             'phone': self.plot_id.phone,
+            'state': self.plot_id.state,
             
                 })
         
-        
-        
-
-
         
         self.plot_id.update({
             'booking_id': False,
@@ -54,6 +59,7 @@ class PlotUpdateWizard(models.TransientModel):
             'token_validity': False,
             'cnic': '',
             'phone': '',
+            'state': 'available',
         })
 
         
