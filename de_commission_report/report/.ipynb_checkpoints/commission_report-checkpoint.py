@@ -19,6 +19,9 @@ class PlotDetailXlS(models.AbstractModel):
         header_row_style = workbook.add_format({'bold': True, 'align': 'center', 'border':True})
         format2 = workbook.add_format({'align': 'center'})
         format3 = workbook.add_format({'align': 'center','bold': True,'border': True,})
+        
+        sheet.write('C1:D1', 'SITARA GREEN CITY' ,title)
+        sheet.write('C2:D2', 'COMMISSION REPORT' ,title)
 
         sheet.set_column(0, 0, 30)
         sheet.set_column(1, 1, 25)
