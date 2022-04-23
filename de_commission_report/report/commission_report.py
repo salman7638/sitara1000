@@ -32,7 +32,7 @@ class PlotDetailXlS(models.AbstractModel):
         sheet.write(2, 2, 'Customer Name', header_row_style)
         sheet.write(2, 3, 'Dealer Name', header_row_style)
         sheet.write(2, 4, "Commission", header_row_style)
-        sheet.write(2, 5, "Commission Date", header_row_style)
+        sheet.write(2, 5, "Commission Payment Date", header_row_style)
         row = 3
 
 
@@ -42,6 +42,7 @@ class PlotDetailXlS(models.AbstractModel):
         row = 3
         col_no = 0 
         sr_no = 1
+        total_commission=0
         for plt in commission_detail:
             
                 
@@ -54,6 +55,7 @@ class PlotDetailXlS(models.AbstractModel):
             sheet.write(row, col_no, str(plt.booking_id.dealer_id.name if plt.booking_id.dealer_id.name else ' '), format2)
             col_no += 1
             sheet.write(row, col_no, round(plt.commission_amount,4), format2)
+            total_commission += plt.commission_amount
             col_no += 1
             sheet.write(row, col_no, str(plt.booking_id.commission_date if plt.booking_id.commission_date else ' '), format2)
             col_no += 1
@@ -62,6 +64,18 @@ class PlotDetailXlS(models.AbstractModel):
             col_no =0
             sr_no += 1
             row += 1
+            
+            
+        sheet.write(row, 0, str(), header_row_style)
+        sheet.write(row, 1, str(), header_row_style)
+        sheet.write(row, 2, str(), header_row_style)
+        sheet.write(row, 3, str(), header_row_style)
+        sheet.write(row, 4, round(total_commission,2), header_row_style)
+        sheet.write(row, 5, str(), header_row_style)
+        row += 1
+        
+            
+            
 
 
 
